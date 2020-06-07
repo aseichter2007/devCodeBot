@@ -229,7 +229,7 @@ namespace SearchPro
             bool projectDefined = false;
             foreach (string item in platforms)
             {
-                if (!input.Contains(item))
+                if (input.Contains(item))
                 {
                     projectDefined = true;
                 }
@@ -285,7 +285,7 @@ namespace SearchPro
             bool languageDefined = false;
             foreach (string item in languages)
             {
-                if (!input.Contains(item))
+                if (input.Contains(item))
                 {
                     languageDefined = true;
                 }
