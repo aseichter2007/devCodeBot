@@ -341,7 +341,7 @@ namespace SearchPro
                             StringBuilder thisphrase = new StringBuilder();
                             for (int ii = 0; ii < phrase.Length; ii++)
                             {
-                                thisphrase.Append(phrase[ii] + " ");
+                                thisphrase.Append(check[i+ii] + " ");
                             }
                             working = thisphrase.ToString().Trim();
                         }
@@ -375,7 +375,7 @@ namespace SearchPro
                         StringBuilder thisphrase = new StringBuilder();
                         for (int ii = 0; ii < phrase.Length; ii++)
                         {
-                            thisphrase.Append(phrase[ii] + " ");
+                            thisphrase.Append(check[ i + ii] + " ");
                         }
                         working = thisphrase.ToString().Trim();
                     }
@@ -403,7 +403,7 @@ namespace SearchPro
                         StringBuilder thisphrase = new StringBuilder();
                         for (int ii = 0; ii < phrase.Length; ii++)
                         {
-                            thisphrase.Append(phrase[ii] + " ");
+                            thisphrase.Append(check[i+ii] + " ");
                         }
                         working = thisphrase.ToString().Trim();
                     }
