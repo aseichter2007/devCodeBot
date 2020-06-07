@@ -251,9 +251,10 @@ namespace SearchPro
             string[] working = input.Split(' ');
             foreach (KeyValuePair<string, string> nearConcept in nearConcepts)
             {
-                if (PhraseChecker(working, nearConcept.Key))
+
+                int location = PhraseLocate(working, nearConcept.Key);
+                if (location>-1)
                 {
-                    int location = PhraseLocate(working, nearConcept.Key);
                     working = PhraseRemover(working, nearConcept.Key);
                     working = PhraseInsert(location, working, nearConcept.Value);
                 }
