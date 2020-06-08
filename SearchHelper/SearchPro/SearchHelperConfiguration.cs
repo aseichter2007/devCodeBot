@@ -12,7 +12,7 @@ namespace SearchPro
     public static class SearchHelperConfiguration
     {
         public static string preferedLanguage = "c#";
-        public static string activeProject = "";
+        public static string activeProject = "asp.net mvc";
         public static List<string> languages = new List<string>
         {
             "c#",
