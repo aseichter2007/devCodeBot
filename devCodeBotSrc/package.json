@@ -1,0 +1,26 @@
+{
+  "name": "devcodebotsrc",
+  "version": "1.0.0",
+  "description": "Houses Node.js packages for devCodeBot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aseichter2007/devCodeBot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aseichter2007/devCodeBot/issues"
+  },
+  "homepage": "https://github.com/aseichter2007/devCodeBot#readme",
+  "dependencies": {
+    "@slack/events-api": "^2.3.3",
+    "@slack/interactive-messages": "^1.6.0",
+    "@slack/web-api": "^5.10.0",
+    "dotenv": "^8.2.0"
+  }
+}
