@@ -59,6 +59,11 @@ namespace SearchPro
             nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
 
         }
+        /// <summary>
+        /// using your preferredLanguage and your activeProject, other values from SearchHelperConfiguration.
+        /// </summary>
+        /// <param name="preferredLanguage"></param>
+        /// <param name="activeProject"></param>
         public SearchHelper(string preferredLanguage, string activeProject)
         {
             this.preferredLanguage = preferredLanguage;
@@ -72,110 +77,17 @@ namespace SearchPro
 
         }
         /// <summary>
-        /// using your preferred language reccomendation and your list of used languages, other values from SearchHelperConfigurations.cs
+        ///This constructor is intended to use database storage to pull all data from the database
         /// </summary>
         /// <param name="preferredLanguage"></param>
-        /// <param name="languages"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages)
-        {
-            this.preferredLanguage = preferredLanguage;
-            this.languages = languages;
-            activeProject = SearchHelperConfiguration.activeProject;
-            badwords = SearchHelperConfiguration.badwords;//stores words not useful in finding proper search results.
-            badphrases = SearchHelperConfiguration.badphrases;//stores phrases not useful in finding proper search results.
-            platforms = SearchHelperConfiguration.platforms;//stores names of platforms that students use.
-            preferredSearches = SearchHelperConfiguration.preferredSearches;//stores list of preffered sites that students should land on
-            nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
-
-        }
-        /// <summary>
-        /// other values defined in Searchhelper.cs
-        /// </summary>
-        /// <param name="preferredLanguage"></param>
-        /// <param name="languages"></param>
-        /// <param name="badwords"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages, List<string> badwords)
-        {
-            this.preferredLanguage = preferredLanguage;
-            this.languages = languages;
-            this.badwords = badwords;
-            activeProject = SearchHelperConfiguration.activeProject;
-            badphrases = SearchHelperConfiguration.badphrases;//stores phrases not useful in finding proper search results.
-            platforms = SearchHelperConfiguration.platforms;//stores names of platforms that students use.
-            preferredSearches = SearchHelperConfiguration.preferredSearches;//stores list of preffered sites that students should land on
-            nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
-
-        }
-        /// <summary>
-        /// other values defined in Searchhelper.cs
-        /// </summary>
-        /// <param name="preferredLanguage"></param>
-        /// <param name="languages"></param>
-        /// <param name="badwords"></param>
-        /// <param name="badphrases"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages, List<string> badwords, List<string> badphrases)
-        {
-            this.preferredLanguage = preferredLanguage;
-            this.languages = languages;
-            this.badwords = badwords;
-            this.badphrases = badphrases;
-            activeProject = SearchHelperConfiguration.activeProject;
-            platforms = SearchHelperConfiguration.platforms;//stores names of platforms that students use.
-            preferredSearches = SearchHelperConfiguration.preferredSearches;//stores list of preffered sites that students should land on
-            nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
-
-        }
-        /// <summary>
-        /// other values defined in Searchhelper.cs
-        /// </summary>
-        /// <param name="preferredLanguage"></param>
-        /// <param name="languages"></param>
-        /// <param name="badwords"></param>
-        /// <param name="badphrases"></param>
-        /// <param name="platforms"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms)
-        {
-            this.preferredLanguage = preferredLanguage;
-            this.languages = languages;
-            this.badwords = badwords;
-            this.badphrases = badphrases;
-            this.platforms = platforms;
-            activeProject = SearchHelperConfiguration.activeProject;
-            preferredSearches = SearchHelperConfiguration.preferredSearches;//stores list of preffered sites that students should land on
-            nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
-
-        }
-        /// <summary>
-        /// other calues defined in SearchHelperConfiguration.cs
-        /// </summary>
-        /// <param name="preferredLanguage"></param>
-        /// <param name="languages"></param>
-        /// <param name="badwords"></param>
-        /// <param name="badphrases"></param>
-        /// <param name="platforms"></param>
-        /// <param name="preferreddSearches"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms, List<string> preferreddSearches)
-        {
-            this.preferredLanguage = preferredLanguage;
-            this.languages = languages;
-            this.badwords = badwords;
-            this.badphrases = badphrases;
-            this.platforms = platforms;
-            this.preferredSearches = preferreddSearches;
-            activeProject = SearchHelperConfiguration.activeProject;
-            nearConcepts = SearchHelperConfiguration.nearConcepts;//dictionary of close terms to be replaced
-        }
-        /// <summary>
-        /// defining preferred language and all available check lists
-        /// </summary>
-        /// <param name="preferredLanguage"></param>
+        /// <param name="activeProject"></param>
         /// <param name="languages"></param>
         /// <param name="badwords"></param>
         /// <param name="badphrases"></param>
         /// <param name="platforms"></param>
         /// <param name="preferreddSearches"></param>
         /// <param name="nearConcepts"></param>
-        public SearchHelper(string preferredLanguage, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms, List<string> preferreddSearches, Dictionary<string, string> nearConcepts)
+        public SearchHelper(string preferredLanguage,string activeProject, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms, List<string> preferreddSearches, Dictionary<string, string> nearConcepts)
         {
             this.preferredLanguage = preferredLanguage;
             this.languages = languages;
@@ -184,7 +96,7 @@ namespace SearchPro
             this.platforms = platforms;
             this.preferredSearches = preferreddSearches;
             this.nearConcepts = nearConcepts;
-            activeProject = SearchHelperConfiguration.activeProject;
+            this.activeProject = activeProject;
         }
         /// <summary>
         /// returns an array of optimized searches from input appended with each preferred search site appended
@@ -253,9 +165,9 @@ namespace SearchPro
             {
 
                 int location = PhraseLocate(working, nearConcept.Key);
-                if (location>-1)
+                if (location!=-1)
                 {
-                    working = PhraseRemover(working, nearConcept.Key);
+                    working = PhraseRemover(location, working, nearConcept.Key);
                     working = PhraseInsert(location, working, nearConcept.Value);
                 }
             }
@@ -306,60 +218,41 @@ namespace SearchPro
         {
             //checks and removes bad words and phrases from input array using PhraseChecker() and PhraseRemover()
             string[] working = input;
-            foreach (string badphrase in badwords)
+            foreach (string badword in badwords)
             {
-                if (PhraseChecker(working, badphrase))
+                int loc = PhraseLocate(working, badword);
+                if (loc!=-1)
                 {
-                    working = PhraseRemover(working, badphrase);
+                    working = PhraseRemover(loc,working, badword);
                 }
             }
             foreach (string badphrase in badphrases)
             {
-                if (PhraseChecker(working, badphrase))
+                int loc = PhraseLocate(working, badphrase);
+                if (loc!=-1)
                 {
-                    working = PhraseRemover(working, badphrase);
+                    working = PhraseRemover(loc, working, badphrase);
                 }
             }
-            string[] output = input;//for now 
-            return output;
+            return working;
         }
-        public string[] PhraseRemover(string[] removeFrom, string removePhrase)
+        public string[] PhraseRemover(int start, string[] removeFrom, string removePhrase)
         {
             //this whole funciton might be doable wih just 
             //removeFrom.ToString().Remove(removePhrase); or something similar
             string[] phrase = removePhrase.Split(' ');
             string[] check = removeFrom;
-            string working = "";
             do
             {
+            List<string> removed = check.ToList();
+            removed.RemoveRange(start, phrase.Length);
+            check = removed.ToArray();
+            start = PhraseLocate(check, removePhrase);
+            } while (start!=-1);
+            
+           
 
-                for (int i = 0; i < removeFrom.Length; i++)
-                {
-                    if (check[i] == phrase[0])
-                    {
-                        if (i + phrase.Length < removeFrom.Length)
-                        {
-                            StringBuilder thisphrase = new StringBuilder();
-                            for (int ii = 0; ii < phrase.Length; ii++)
-                            {
-                                thisphrase.Append(check[i+ii] + " ");
-                            }
-                            working = thisphrase.ToString().Trim();
-                        }
-                        if (working == removePhrase)
-                        {
-                            List<string> removed = check.ToList();
-                            removed.RemoveRange(i, phrase.Length);
-                            check = removed.ToArray();
-                            break;
-                        }
-                    }
-                }
-
-            } while (PhraseChecker(check, removePhrase));
-
-            string[] output = check;
-            return output;
+            return check;
         }
         public bool PhraseChecker(string[] check, string containsPhrase)
         {
@@ -399,7 +292,7 @@ namespace SearchPro
             {
                 if (check[i] == phrase[0])
                 {
-                    if (i + phrase.Length < check.Length)
+                    if (i + phrase.Length <= check.Length)
                     {
                         StringBuilder thisphrase = new StringBuilder();
                         for (int ii = 0; ii < phrase.Length; ii++)

@@ -12,7 +12,7 @@ namespace SearchPro
     public static class SearchHelperConfiguration
     {
         public static string preferedLanguage = "c#";
-        public static string activeProject = "";
+        public static string activeProject = "asp.net mvc";
         public static List<string> languages = new List<string>
         {
             "c#",
@@ -65,11 +65,11 @@ namespace SearchPro
         //remember that these values compare after the badwords and phrases are removed, and will not find matches if those words are used.
         public static Dictionary<string, string> nearConcepts = new Dictionary<string, string>()
         {
-            { "get value in",index },
+            { "get values in",each },
             { "search for value",each },
             { "get individual value",index },
             { "find location of",index },
-            { "webpage in mvc" , view}
+            { "webpage in mvc" , view},
 
 
         };
