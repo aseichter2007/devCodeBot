@@ -28,14 +28,13 @@ namespace SearchHelperBot.Controllers
         }
 
         // GET api/<ValuesController>/5
-        [HttpGet("{name}")]
-        public  async Task<List<string>> Get(string name )//we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
+        [HttpGet("{day}")]
+        public  async Task<List<string>> Get(int day )//we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
         {//or we can get json
             DbHandler dbHandler = new DbHandler(_repo);
             Task<List<List<string>>> searchHelperListsasync = Task.Run(()=> dbHandler.GetListsSearchParameters(day));
             Task<Dictionary<string, string>> searchHelperDicitnoaryasync = Task.Run(() => dbHandler.GetNearConcepts(day));
 
-            int day = 0;
             string search = name;
             List<List<string>> searchHelperLists = await searchHelperListsasync;
             Dictionary<string, string> searchHelperDicitonary = await searchHelperDicitnoaryasync;
