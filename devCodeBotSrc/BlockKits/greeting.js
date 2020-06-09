@@ -17,21 +17,21 @@ const greeting = (message) => {
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\`/lookup\`: follow this with a search query and I'll get you some suggested Google search results"
+					"text": "\`lookup\`: follow this with a search query and I'll get you some suggested Google search results"
 				}
 			},
 			{
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\`/timebox\`: this will set a 30-minute timer to keep you in check while you're troubleshooting"
+					"text": "\`timebox\`: this will set a 30-minute timer to keep you in check while you're troubleshooting"
 				}
 			},
 			{
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\`/questioncard\`: this will create a form that you can fill out to request help from your instructors"
+					"text": "\`question card\`: this will create a form that you can fill out to request help from your instructors"
 				}
 			}
 		]
