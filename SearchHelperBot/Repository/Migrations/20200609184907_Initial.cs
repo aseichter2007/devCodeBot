@@ -114,6 +114,19 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PreferredSearches",
+                columns: table => new
+                {
+                    PreferredSearchId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SearchName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PreferredSearches", x => x.PreferredSearchId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RawSearches",
                 columns: table => new
                 {
@@ -207,6 +220,9 @@ namespace Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "PreferredLanguages");
+
+            migrationBuilder.DropTable(
+                name: "PreferredSearches");
 
             migrationBuilder.DropTable(
                 name: "RawSearches");

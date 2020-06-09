@@ -167,6 +167,21 @@ namespace Repository.Migrations
                     b.ToTable("PreferredLanguages");
                 });
 
+            modelBuilder.Entity("Repository.Models.PreferredSearch", b =>
+                {
+                    b.Property<int>("PreferredSearchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SearchName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PreferredSearchId");
+
+                    b.ToTable("PreferredSearches");
+                });
+
             modelBuilder.Entity("Repository.Models.RawSearch", b =>
                 {
                     b.Property<int>("RawSearchId")
