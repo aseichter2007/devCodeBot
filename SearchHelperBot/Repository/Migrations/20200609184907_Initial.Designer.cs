@@ -9,7 +9,7 @@ using Repository.Data;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200608190029_Initial")]
+    [Migration("20200609184907_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,21 @@ namespace Repository.Migrations
                     b.HasKey("PreferredLanguageId");
 
                     b.ToTable("PreferredLanguages");
+                });
+
+            modelBuilder.Entity("Repository.Models.PreferredSearch", b =>
+                {
+                    b.Property<int>("PreferredSearchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SearchName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PreferredSearchId");
+
+                    b.ToTable("PreferredSearches");
                 });
 
             modelBuilder.Entity("Repository.Models.RawSearch", b =>
