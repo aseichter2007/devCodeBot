@@ -32,7 +32,14 @@ namespace SearchHelperBot
             //List<string> platforms = await platformsasync;
             //List<string> Preferredsearches = await preferredSearchasync;
 
-
+            if (preferredLanguage.Count<1)
+            {
+                preferredLanguage.Add("c#");
+            }
+            if (activeProject.Count<1)
+            {
+                activeProject.Add("");
+            }
 
             List<List<string>> searchHelperLists = new List<List<string>>() { preferredLanguage,activeProject,languages,badwords,badphrases,platforms,preferredsearches};
             return searchHelperLists;
@@ -110,7 +117,7 @@ namespace SearchHelperBot
         }
         public Dictionary<string,string> GetNearConcepts(int dayId)
         {
-            var data = _repo.NearConceptIdea.FindByCondition(c => c.TimeId <= dayId||c.TimeId==0);
+            var data = _repo.NearConceptIdea.FindByCondition(c => c.TimeId >= dayId||c.TimeId==0);
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var item in data)
             {

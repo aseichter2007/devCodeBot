@@ -255,34 +255,34 @@ namespace SearchHelperBot
 
             return check;
         }
-        public bool PhraseChecker(string[] check, string containsPhrase)
-        {
-            //checks for the input phrase in the query array.       
-            bool output = false;
-            string[] phrase = containsPhrase.Split(splitchar);
-            string working = "";
-            for (int i = 0; i < check.Length; i++)
-            {
-                if (check[i] == phrase[0])
-                {
-                    if (i + phrase.Length < check.Length)
-                    {
-                        StringBuilder thisphrase = new StringBuilder();
-                        for (int ii = 0; ii < phrase.Length; ii++)
-                        {
-                            thisphrase.Append(check[i + ii] + " ");
-                        }
-                        working = thisphrase.ToString().Trim();
-                    }
-                    if (working == containsPhrase)
-                    {
-                        output = true;
-                        break;
-                    }
-                }
-            }
-            return output;
-        }
+        //public bool PhraseChecker(string[] check, string containsPhrase)
+        //{
+        //    //checks for the input phrase in the query array.       
+        //    bool output = false;
+        //    string[] phrase = containsPhrase.Split(splitchar);
+        //    string working = "";
+        //    for (int i = 0; i < check.Length; i++)
+        //    {
+        //        if (check[i] == phrase[0])
+        //        {
+        //            if (i + phrase.Length < check.Length)
+        //            {
+        //                StringBuilder thisphrase = new StringBuilder();
+        //                for (int ii = 0; ii < phrase.Length; ii++)
+        //                {
+        //                    thisphrase.Append(check[i + ii] + " ");
+        //                }
+        //                working = thisphrase.ToString().Trim();
+        //            }
+        //            if (working == containsPhrase)
+        //            {
+        //                output = true;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    return output;
+        //}
         public int PhraseLocate(string[] check, string containsPhrase)
         {
             //checks for the input phrase in the query array.       
