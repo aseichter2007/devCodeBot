@@ -16,13 +16,13 @@ namespace SearchHelperBot
         }
         public async Task<List<List<string>>> GetListsSearchParameters(int day)
         {
-            var preferredLanguageasync = Task.Run(()=> GetPreferredLanguage(day));
-            var activeProjectasync = Task.Run(() => GetActiveProject(day));
-            var languagesasync = Task.Run(() => GetLanguages());
-            var badwordsasync = Task.Run(() => GetBadWords());
-            var badphrasesasync = Task.Run(() => GetBadPhrases());
-            var platformsasync = Task.Run(() => GetPlatforms());
-            var preferredSearchasync = Task.Run(() => GetPreferredSearches());
+            var preferredLanguageasync= GetPreferredLanguage(day);
+            var activeProjectasync = GetActiveProject(day);
+            var languagesasync = GetLanguages();
+            var badwordsasync = GetBadWords();
+            var badphrasesasync = GetBadPhrases();
+            var platformsasync = GetPlatforms();
+            var preferredSearchasync = GetPreferredSearches();
 
             List<string> preferredLanguage = await preferredLanguageasync;
             List<string> activeProject = await activeProjectasync;
@@ -40,6 +40,7 @@ namespace SearchHelperBot
         public async Task<List<string>> GetPreferredLanguage(int timeid)
         {
             var preferedLanguage =  _repo.PreferredLanguage.FindByCondition(p => p.TimeId == timeid);
+
             List<string> output = new List<string>();
             foreach (var item in preferedLanguage)
             {
