@@ -350,6 +350,4 @@ MigrationBackup/
 .ionide/
 
 # .env with environment variables
-env
-*.env
 .env
