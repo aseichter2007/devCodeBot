@@ -110,7 +110,7 @@ namespace SearchHelperBot
         }
         public Dictionary<string,string> GetNearConcepts(int dayId)
         {
-            var data = _repo.NearConceptIdea.FindByCondition(c => c.TimeId <= dayId||c.TimeId==0);
+            var data = _repo.NearConceptIdea.FindByCondition(c => c.TimeId >= dayId||c.TimeId==0);
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var item in data)
             {
