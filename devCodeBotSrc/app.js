@@ -12,6 +12,9 @@ const { WebClient } = require('@slack/web-api');
 const token = process.env.SLACK_BOT_TOKEN;
 const web = new WebClient(token);
 
+const greeting = require('./BlockKits/greeting');
+const questionCard = require('./BlockKits/qc')
+
 app.use('/slack/events', slackEvents.expressMiddleware());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -22,7 +25,14 @@ slackEvents.on('message', (message, body) => {
       try {
         // Respond to the message back in the same channel
         if (message.text == 'Help') {
-            const response = await web.chat.postMessage({ channel: message.channel, text: 'Sup' });
+            var block = greeting.greeting(message);
+            var parsedBlock = JSON.parse(block);
+            const response = await web.chat.postMessage(parsedBlock);
+        }
+        if (message.text == 'question card') {
+            var block = qc.questionCard();
+            var parsedBlock = JSON.parse(block);
+            const response = await web.chat.postMessage(parsedBlock);
         }
       } catch (error) {
         console.log(error.data);
