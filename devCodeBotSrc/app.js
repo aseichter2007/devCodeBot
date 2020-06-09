@@ -16,11 +16,13 @@ const token = process.env.SLACK_BOT_TOKEN;
 const web = new WebClient(token);
 const { createMessageAdapter } = require('@slack/interactive-messages');
 const slackInteractions = createMessageAdapter(process.env.SLACK_SIGNING_SECRET);
+const instructorChannel = process.env.INSTRUCTOR_CHANNEL_ID;
 
 // import message payloads
 const greeting = require('./BlockKits/greeting');
 const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
+const qcPost = require('./BlockKits/qc-post');
 
 // configure express server for development
 app.use('/slack/actions', slackInteractions.expressMiddleware());
@@ -52,15 +54,34 @@ slackEvents.on('message', (message, body) => {
 // interactivity functions
 slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
     try {
-        await web.views.open({
-            trigger_id: payload.trigger_id,
-            view: questionCard.questionCard()
-        })
-    } catch { (e) }
+        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id));
+        await web.views.open( openModal );
+    } catch (e) {
+        console.log(e);
+    }
 
     return {
         text: 'Processing...'
       }
+});
+
+// modal submit functions
+slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
+    const blockData = payload.view.state;
+    const myGoal = blockData.values.myGoalBlock.myGoalResponse.value;
+    const myProblem = blockData.values.myProblemBlock.myProblemResponse.value;
+    const myAttempts = blockData.values.myAttemptsBlock.myAttemptsResponse.value;
+
+    try {
+        const msg = JSON.parse(qcPost.questionCardPost(myGoal, myProblem, myAttempts, payload.user.name, instructorChannel));
+        const response = await web.chat.postMessage(msg);
+    } catch (e) {
+        console.log(e);
+    }
+
+    return {
+        response_action: "clear"
+    }
 });
 
 // Handle errors (see `errorCodes` export)
