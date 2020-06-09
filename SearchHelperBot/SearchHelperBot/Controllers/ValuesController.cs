@@ -35,7 +35,7 @@ namespace SearchHelperBot.Controllers
             Task<List<List<string>>> searchHelperListsasync = Task.Run(()=> dbHandler.GetListsSearchParameters(day));
             Task<Dictionary<string, string>> searchHelperDicitnoaryasync = Task.Run(() => dbHandler.GetNearConcepts(day));
 
-            string search = name;
+            string search = "test search help I am trying to get out of a dumptster";
             List<List<string>> searchHelperLists = await searchHelperListsasync;
             Dictionary<string, string> searchHelperDicitonary = await searchHelperDicitnoaryasync;
             SearchHelper searchHelper = new SearchHelper(searchHelperLists[0][0], searchHelperLists[1][0], searchHelperLists[2], searchHelperLists[3], searchHelperLists[4], searchHelperLists[5],searchHelperLists[6],searchHelperDicitonary);
