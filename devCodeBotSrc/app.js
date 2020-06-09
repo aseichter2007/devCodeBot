@@ -62,7 +62,7 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
 
     return {
         text: 'Processing...'
-      }
+    }
 });
 
 // modal submit functions
@@ -75,6 +75,8 @@ slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
     try {
         const msg = JSON.parse(qcPost.questionCardPost(myGoal, myProblem, myAttempts, payload.user.name, instructorChannel));
         const response = await web.chat.postMessage(msg);
+        // Below is not currently working; idea is to post validation back to user that the message was sent. Need to find a clever way to access current channel ID
+        // const verification = await web.chat.postMessage({channel: channel.id!?, text: 'Your card has been submitted and will be reviewed by your instructors.'});
     } catch (e) {
         console.log(e);
     }

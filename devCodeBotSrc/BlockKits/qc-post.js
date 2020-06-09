@@ -6,10 +6,12 @@ const questionCardPost = (goal, problem, attempts, user, channel) => {
             {
                 "type": "section",
                 "text": {
-                    "type": "plain_text",
-                    "text": "Question card submitted by: ${user}",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": ":email: Question card submitted by *${user}*"
                 }
+            },
+            {
+                "type": "divider"
             },
             {
                 "type": "section",
@@ -21,9 +23,8 @@ const questionCardPost = (goal, problem, attempts, user, channel) => {
             {
                 "type": "section",
                 "text": {
-                    "type": "plain_text",
-                    "text": "${goal}",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": ">${goal}"
                 }
             },
             {
@@ -36,9 +37,8 @@ const questionCardPost = (goal, problem, attempts, user, channel) => {
             {
                 "type": "section",
                 "text": {
-                    "type": "plain_text",
-                    "text": "${problem}",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": ">${problem}"
                 }
             },
             {
@@ -51,9 +51,8 @@ const questionCardPost = (goal, problem, attempts, user, channel) => {
             {
                 "type": "section",
                 "text": {
-                    "type": "plain_text",
-                    "text": "${attempts}",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": ">${attempts}"
                 }
             }
         ]
