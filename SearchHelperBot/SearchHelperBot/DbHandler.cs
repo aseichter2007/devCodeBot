@@ -32,7 +32,14 @@ namespace SearchHelperBot
             //List<string> platforms = await platformsasync;
             //List<string> Preferredsearches = await preferredSearchasync;
 
-
+            if (preferredLanguage.Count<1)
+            {
+                preferredLanguage.Add("c#");
+            }
+            if (activeProject.Count<1)
+            {
+                activeProject.Add("");
+            }
 
             List<List<string>> searchHelperLists = new List<List<string>>() { preferredLanguage,activeProject,languages,badwords,badphrases,platforms,preferredsearches};
             return searchHelperLists;
