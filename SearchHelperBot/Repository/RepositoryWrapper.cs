@@ -21,6 +21,19 @@ namespace Repository
         private IRawSearchRepository _rawSearch;
         private ISettingRepository _setting;
         private ITimeIndexRepository _timeIndex;
+        private IPreferredSearchRepository _preferredSearch;
+
+        public IPreferredSearchRepository PreferredSearch
+        {
+            get
+            {
+                if (_preferredSearch==null)
+                {
+                    _preferredSearch = new PreferredSearchRepository(_context);
+                }
+                return _preferredSearch;
+            }
+        }
 
         public IActiveProjectRepository ActiveProject
         {

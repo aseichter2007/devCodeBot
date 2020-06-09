@@ -18,6 +18,7 @@ namespace Repository.Contracts
         IRawSearchRepository RawSearch { get; }
         ISettingRepository Setting { get; }
         ITimeIndexRepository TimeIndex { get; }
+        IPreferredSearchRepository PreferredSearch { get; }
         void Save();
     }
 }

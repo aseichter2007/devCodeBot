@@ -21,6 +21,7 @@ namespace Repository.Data
         public DbSet<RawSearch> RawSearches { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<TimeIndex> TimeIndices { get; set; }
+        public DbSet<PreferredSearch> PreferredSearches { get; set; }
 
         // constructor
         public ApplicationDbContext(DbContextOptions options) : base(options)
