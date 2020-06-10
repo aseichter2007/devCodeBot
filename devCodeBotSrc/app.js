@@ -56,6 +56,9 @@ slackEvents.on('message', (message, body) => {
             const immediateResponse = await web.chat.postMessage({ channel: message.channel, text: 'Okay, starting a timer for 30 minutes now!' });
             const response = await web.chat.scheduleMessage(parsedBlock);
         }
+        if (message.text == 'cancel timebox') {
+            
+        }
       } catch (error) {
         console.log(error.data);
       }
