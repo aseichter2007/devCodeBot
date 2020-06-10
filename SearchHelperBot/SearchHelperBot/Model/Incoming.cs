@@ -7,7 +7,7 @@
 
     public class Search
     {
-        public string role { get; set; }
+        public string role { get; set; }		// "student", "instructor"
         public string username { get; set; }
         public Request request { get; set; }
         public Add add { get; set; }
@@ -18,9 +18,9 @@
 
     public class Request
     {
-        public string type { get; set; }
+        public string type { get; set; }		// "badwords"
         public int day { get; set; }
-        public string search { get; set; }
+        public string search { get; set; }		// user search request
     }
 
     public class Add

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace SearchHelperBot.Model
 {
+    // Contains lists of each kind of model and a List<string> for the search results 
+    // so can create a selectlist on the frontend for user to choose what to edit or delete
     public class Outgoing
     {
         public string Responsetype;

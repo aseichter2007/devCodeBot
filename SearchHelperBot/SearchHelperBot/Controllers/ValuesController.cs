@@ -43,25 +43,26 @@ namespace SearchHelperBot.Controllers
         }
                 
         // POST api/<ValuesController>
-        //post will be our sole entrypoint and the incoming file will define what happens
+        // POST will be our sole entrypoint and the incoming file will define what happens
         [HttpPost]
-        public async Task<Outgoing> Post([FromBody] Incoming incoming)//this is looking incredibly ugly and should probably break into a bunch of methods or go into its own class like I did DbHandler
+        public async Task<Outgoing> Post([FromBody] Incoming incoming)
         {
-            if (incoming.search.role=="student")//check if incoming message is a basic search
+            if (incoming.search.role=="student")    // basic search
             {
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
-                Outgoing searchresult = new Outgoing();//the outgoing object contains lists of each kind of model and a List<string> for the search results, so that I can create a selectlist on the front side for them to choose what to edit or delete
-                searchresult.Searches= await ProcessSearch(day, search);
-                return searchresult;
+                Outgoing searchResult = new Outgoing();
+                searchResult.Searches= await ProcessSearch(day, search);
+                return searchResult;
             }
-            else//if not type student, it must be an instructor
+            else      //if not type student, it must be an instructor
             {
-                if (incoming.search.request.type == "badwords")//check request type and return a list of that type
+                if (incoming.search.request.type == "badwords")
                 {
-                    Outgoing badwordslist = new Outgoing();
-                    badwordslist.Responsetype = "badwords";
-                    badwordslist.badWords = _repo.BadWords.FindAll().ToList();
+                    Outgoing badWordsList = new Outgoing();
+                    badWordsList.Responsetype = "badwords";
+                    badWordsList.badWords = _repo.BadWords.FindAll().ToList();
+                    return badWordsList;
                 }
                 else if (incoming.search.request.type == "badphrases")
                 {
@@ -140,9 +141,9 @@ namespace SearchHelperBot.Controllers
                 error2.Responsetype = "something went wrong in request check";
                 return error2;
             }
-            Outgoing error = new Outgoing();
-            error.Responsetype = "something went wrong in role test";
-            return error;           
+            //Outgoing error = new Outgoing();
+            //error.Responsetype = "something went wrong in role test";
+            //return error;           
         }
 
         // PUT api/<ValuesController>/5
