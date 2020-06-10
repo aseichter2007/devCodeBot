@@ -9,7 +9,7 @@ using Repository.Data;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200609184907_Initial")]
+    [Migration("20200610183306_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,17 +27,23 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProjectType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TimeId")
-                        .HasColumnType("int");
-
                     b.HasKey("ActiveProjectId");
 
-                    b.HasIndex("TimeId");
-
                     b.ToTable("ActiveProjects");
+
+                    b.HasData(
+                        new
+                        {
+                            ActiveProjectId = 1,
+                            Day = 0,
+                            ProjectType = "asp.net mvc"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.BadPhrase", b =>
@@ -53,6 +59,23 @@ namespace Repository.Migrations
                     b.HasKey("BadPhraseId");
 
                     b.ToTable("BadPhrases");
+
+                    b.HasData(
+                        new
+                        {
+                            BadPhraseId = 1,
+                            Phrase = "trying to"
+                        },
+                        new
+                        {
+                            BadPhraseId = 2,
+                            Phrase = "want to"
+                        },
+                        new
+                        {
+                            BadPhraseId = 3,
+                            Phrase = "need to"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.BadWord", b =>
@@ -68,6 +91,33 @@ namespace Repository.Migrations
                     b.HasKey("BadWordId");
 
                     b.ToTable("BadWords");
+
+                    b.HasData(
+                        new
+                        {
+                            BadWordId = 1,
+                            Word = "i"
+                        },
+                        new
+                        {
+                            BadWordId = 2,
+                            Word = "my"
+                        },
+                        new
+                        {
+                            BadWordId = 3,
+                            Word = "am"
+                        },
+                        new
+                        {
+                            BadWordId = 4,
+                            Word = "like"
+                        },
+                        new
+                        {
+                            BadWordId = 5,
+                            Word = "maybe"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.Instructor", b =>
@@ -77,9 +127,44 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("InstructorId");
 
                     b.ToTable("Instructors");
+
+                    b.HasData(
+                        new
+                        {
+                            InstructorId = 1,
+                            UserName = "Brett Johnson"
+                        },
+                        new
+                        {
+                            InstructorId = 2,
+                            UserName = "Charles King"
+                        },
+                        new
+                        {
+                            InstructorId = 3,
+                            UserName = "David Lagrange"
+                        },
+                        new
+                        {
+                            InstructorId = 4,
+                            UserName = "Michael Heinisch"
+                        },
+                        new
+                        {
+                            InstructorId = 5,
+                            UserName = "Michael Terrill"
+                        },
+                        new
+                        {
+                            InstructorId = 6,
+                            UserName = "Nevin Seibel"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.Language", b =>
@@ -95,6 +180,23 @@ namespace Repository.Migrations
                     b.HasKey("LanguageId");
 
                     b.ToTable("Languages");
+
+                    b.HasData(
+                        new
+                        {
+                            LanguageId = 1,
+                            LanguageName = "c#"
+                        },
+                        new
+                        {
+                            LanguageId = 2,
+                            LanguageName = "javascript"
+                        },
+                        new
+                        {
+                            LanguageId = 3,
+                            LanguageName = "html"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.NearConceptIdea", b =>
@@ -104,18 +206,35 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ProperForm")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TimeId")
+                    b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("ProperForm")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("NearConceptIdeaId");
 
                     b.ToTable("NearConceptIdeas");
+
+                    b.HasData(
+                        new
+                        {
+                            NearConceptIdeaId = 1,
+                            Day = 0,
+                            ProperForm = "loop over each value"
+                        },
+                        new
+                        {
+                            NearConceptIdeaId = 2,
+                            Day = 0,
+                            ProperForm = "find index of"
+                        },
+                        new
+                        {
+                            NearConceptIdeaId = 3,
+                            Day = 0,
+                            ProperForm = "mvc view"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.NearConceptPhrase", b =>
@@ -125,7 +244,7 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ConceptID")
+                    b.Property<int>("ConceptId")
                         .HasColumnType("int");
 
                     b.Property<string>("Phrase")
@@ -134,6 +253,38 @@ namespace Repository.Migrations
                     b.HasKey("NearConceptPhraseId");
 
                     b.ToTable("NearConceptPhrases");
+
+                    b.HasData(
+                        new
+                        {
+                            NearConceptPhraseId = 1,
+                            ConceptId = 1,
+                            Phrase = "get values in"
+                        },
+                        new
+                        {
+                            NearConceptPhraseId = 2,
+                            ConceptId = 1,
+                            Phrase = "search for value"
+                        },
+                        new
+                        {
+                            NearConceptPhraseId = 3,
+                            ConceptId = 2,
+                            Phrase = "get individual value"
+                        },
+                        new
+                        {
+                            NearConceptPhraseId = 4,
+                            ConceptId = 2,
+                            Phrase = "find location of"
+                        },
+                        new
+                        {
+                            NearConceptPhraseId = 5,
+                            ConceptId = 3,
+                            Phrase = "webpage in mvc"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.Platform", b =>
@@ -149,6 +300,28 @@ namespace Repository.Migrations
                     b.HasKey("PlatformId");
 
                     b.ToTable("Platforms");
+
+                    b.HasData(
+                        new
+                        {
+                            PlatformId = 1,
+                            PlatformName = ".net"
+                        },
+                        new
+                        {
+                            PlatformId = 2,
+                            PlatformName = ".net core"
+                        },
+                        new
+                        {
+                            PlatformId = 3,
+                            PlatformName = ".net mvc"
+                        },
+                        new
+                        {
+                            PlatformId = 4,
+                            PlatformName = "mvc"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.PreferredLanguage", b =>
@@ -158,15 +331,23 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
                     b.Property<string>("LanguageName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TimeId")
-                        .HasColumnType("int");
 
                     b.HasKey("PreferredLanguageId");
 
                     b.ToTable("PreferredLanguages");
+
+                    b.HasData(
+                        new
+                        {
+                            PreferredLanguageId = 1,
+                            Day = 0,
+                            LanguageName = "c#"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.PreferredSearch", b =>
@@ -182,6 +363,23 @@ namespace Repository.Migrations
                     b.HasKey("PreferredSearchId");
 
                     b.ToTable("PreferredSearches");
+
+                    b.HasData(
+                        new
+                        {
+                            PreferredSearchId = 1,
+                            SearchName = "docs.microsoft.com"
+                        },
+                        new
+                        {
+                            PreferredSearchId = 2,
+                            SearchName = "stackoverflow"
+                        },
+                        new
+                        {
+                            PreferredSearchId = 3,
+                            SearchName = "w3schools"
+                        });
                 });
 
             modelBuilder.Entity("Repository.Models.RawSearch", b =>
@@ -218,27 +416,6 @@ namespace Repository.Migrations
                     b.HasKey("SettingId");
 
                     b.ToTable("Settings");
-                });
-
-            modelBuilder.Entity("Repository.Models.TimeIndex", b =>
-                {
-                    b.Property<int>("TimeIndexID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("TimeIndexID");
-
-                    b.ToTable("TimeIndices");
-                });
-
-            modelBuilder.Entity("Repository.Models.ActiveProject", b =>
-                {
-                    b.HasOne("Repository.Models.TimeIndex", "TimeIndex")
-                        .WithMany()
-                        .HasForeignKey("TimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

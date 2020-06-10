@@ -11,7 +11,7 @@ namespace Repository.Models
         public string Phrase { get; set; }
 
         [ForeignKey("NearConceptIdea")]
-        public int ConceptID { get; set; }
+        public int ConceptId { get; set; }
         NearConceptIdea NearConceptIdea { get; set; }
     }
 }

@@ -121,7 +121,7 @@ namespace SearchHelperBot
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var item in data)
             {
-                var phrases = _repo.NearConceptPhrases.FindByCondition(p => p.ConceptID == item.NearConceptIdeaId);
+                var phrases = _repo.NearConceptPhrases.FindByCondition(p => p.ConceptId == item.NearConceptIdeaId);
                 foreach (var phrase in phrases)
                 {
                     output.Add(phrase.Phrase, item.ProperForm);

@@ -18,8 +18,6 @@ namespace SearchHelperBot
             "c#",
             "javascript",
             "html",
-
-
         };
         public static List<string> badwords = new List<string>()
         {
@@ -28,19 +26,12 @@ namespace SearchHelperBot
             "am",
             "like",
             "maybe"
-
-
-
-
         };
         public static List<string> badphrases = new List<string>()
         {
             "trying to",
             "want to",
             "need to",
-
-
-
         };
         public static List<string> platforms = new List<string>()
         {
@@ -48,8 +39,6 @@ namespace SearchHelperBot
             ".net core",
             ".net mvc",
             "mvc",
-
-
         };
         public static List<string> preferredSearches = new List<string>()
         {
@@ -70,9 +59,6 @@ namespace SearchHelperBot
             { "get individual value",index },
             { "find location of",index },
             { "webpage in mvc" , view},
-
-
         };
-
     }
 }

@@ -8,7 +8,6 @@ namespace Repository.Models
     public class NearConceptIdea
     {
         public int NearConceptIdeaId { get; set; }
-        public string Title { get; set; }
         public string ProperForm { get; set; }
         public int Day { get; set; }
     }

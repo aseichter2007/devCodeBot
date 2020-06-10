@@ -7,6 +7,20 @@ namespace Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ActiveProjects",
+                columns: table => new
+                {
+                    ActiveProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectType = table.Column<string>(nullable: true),
+                    Day = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActiveProjects", x => x.ActiveProjectId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BadPhrases",
                 columns: table => new
                 {
@@ -37,7 +51,8 @@ namespace Repository.Migrations
                 columns: table => new
                 {
                     InstructorId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -63,9 +78,8 @@ namespace Repository.Migrations
                 {
                     NearConceptIdeaId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
                     ProperForm = table.Column<string>(nullable: true),
-                    TimeId = table.Column<int>(nullable: false)
+                    Day = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +93,7 @@ namespace Repository.Migrations
                     NearConceptPhraseId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Phrase = table.Column<string>(nullable: true),
-                    ConceptID = table.Column<int>(nullable: false)
+                    ConceptId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,7 +120,7 @@ namespace Repository.Migrations
                     PreferredLanguageId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LanguageName = table.Column<string>(nullable: true),
-                    TimeId = table.Column<int>(nullable: false)
+                    Day = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,42 +168,103 @@ namespace Repository.Migrations
                     table.PrimaryKey("PK_Settings", x => x.SettingId);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "TimeIndices",
-                columns: table => new
-                {
-                    TimeIndexID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TimeIndices", x => x.TimeIndexID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ActiveProjects",
-                columns: table => new
-                {
-                    ActiveProjectId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectType = table.Column<string>(nullable: true),
-                    TimeId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ActiveProjects", x => x.ActiveProjectId);
-                    table.ForeignKey(
-                        name: "FK_ActiveProjects_TimeIndices_TimeId",
-                        column: x => x.TimeId,
-                        principalTable: "TimeIndices",
-                        principalColumn: "TimeIndexID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActiveProjects_TimeId",
+            migrationBuilder.InsertData(
                 table: "ActiveProjects",
-                column: "TimeId");
+                columns: new[] { "ActiveProjectId", "Day", "ProjectType" },
+                values: new object[] { 1, 0, "asp.net mvc" });
+
+            migrationBuilder.InsertData(
+                table: "BadPhrases",
+                columns: new[] { "BadPhraseId", "Phrase" },
+                values: new object[,]
+                {
+                    { 1, "trying to" },
+                    { 2, "want to" },
+                    { 3, "need to" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BadWords",
+                columns: new[] { "BadWordId", "Word" },
+                values: new object[,]
+                {
+                    { 1, "i" },
+                    { 2, "my" },
+                    { 3, "am" },
+                    { 4, "like" },
+                    { 5, "maybe" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Instructors",
+                columns: new[] { "InstructorId", "UserName" },
+                values: new object[,]
+                {
+                    { 1, "Brett Johnson" },
+                    { 2, "Charles King" },
+                    { 3, "David Lagrange" },
+                    { 4, "Michael Heinisch" },
+                    { 5, "Michael Terrill" },
+                    { 6, "Nevin Seibel" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Languages",
+                columns: new[] { "LanguageId", "LanguageName" },
+                values: new object[,]
+                {
+                    { 3, "html" },
+                    { 2, "javascript" },
+                    { 1, "c#" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "NearConceptIdeas",
+                columns: new[] { "NearConceptIdeaId", "Day", "ProperForm" },
+                values: new object[,]
+                {
+                    { 1, 0, "loop over each value" },
+                    { 2, 0, "find index of" },
+                    { 3, 0, "mvc view" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "NearConceptPhrases",
+                columns: new[] { "NearConceptPhraseId", "ConceptId", "Phrase" },
+                values: new object[,]
+                {
+                    { 4, 2, "find location of" },
+                    { 3, 2, "get individual value" },
+                    { 5, 3, "webpage in mvc" },
+                    { 1, 1, "get values in" },
+                    { 2, 1, "search for value" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Platforms",
+                columns: new[] { "PlatformId", "PlatformName" },
+                values: new object[,]
+                {
+                    { 1, ".net" },
+                    { 2, ".net core" },
+                    { 3, ".net mvc" },
+                    { 4, "mvc" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PreferredLanguages",
+                columns: new[] { "PreferredLanguageId", "Day", "LanguageName" },
+                values: new object[] { 1, 0, "c#" });
+
+            migrationBuilder.InsertData(
+                table: "PreferredSearches",
+                columns: new[] { "PreferredSearchId", "SearchName" },
+                values: new object[,]
+                {
+                    { 2, "stackoverflow" },
+                    { 1, "docs.microsoft.com" },
+                    { 3, "w3schools" }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -229,9 +304,6 @@ namespace Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Settings");
-
-            migrationBuilder.DropTable(
-                name: "TimeIndices");
         }
     }
 }
