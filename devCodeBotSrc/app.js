@@ -22,7 +22,9 @@ const instructorChannel = process.env.INSTRUCTOR_CHANNEL_ID;
 const greeting = require('./BlockKits/greeting');
 const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
-const qcPost = require('./BlockKits/qc-post');
+const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to see how I handle input data from the modal and posting it back to the instructor chat. You will need to create your own file similar to this one to post the payload back to your API
+const tonyTestStart = require('./BlockKits/tonyTestStart'); // TONY: This pulls in the function from the specified file to be used below
+const tonyTestModal = require('./BlockKits.tonyTestModal'); // TONY: This file contains the actual modal block
 
 // configure express server for development
 app.use('/slack/actions', slackInteractions.expressMiddleware());
@@ -45,6 +47,12 @@ slackEvents.on('message', (message, body) => {
             var parsedBlock = JSON.parse(block);
             const response = await web.chat.postMessage(parsedBlock);
         }
+        // TONY: typing 'tony test' will run this and return the contents of the tonyTestStart file
+        if (message.text == 'tony test') {
+            var block = tonyTestStart.tonyTestStart(message);
+            var parsedBlock = JSON.parse(block);
+            const response = await web.chat.postMessage(parsedBlock); // postMessage(parsedBlock) accepts the entire JSON payload from tonyTestStart and pushes it to the chat window in Slack
+        }
       } catch (error) {
         console.log(error.data);
       }
@@ -64,6 +72,22 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
         text: 'Processing...'
     }
 });
+
+// TONY: interactivity function: invoked when the button is clicked from the first message sent from tonyTestStart()
+slackInteractions.action({ "action-id": "tonyTestModalLaunch" }, async (payload) => {
+    try {
+        var openTonyModal = JSON.parse(tonyTestModal.tonyTestModal(/*Your parameters to send in from the payload */)); // This prepares the modal in JSON format
+        await web.views.open( openTonyModal ); // This actually opens the modal in the UI
+    } catch (e) {
+        console.log(e); // For debugging
+    }
+
+    return {
+        text: 'Processing...'
+    }
+})
+
+// new funciton
 
 // modal submit functions
 slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
@@ -85,6 +109,18 @@ slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
         response_action: "clear"
     }
 });
+
+//TONY: test submission; do with this what you want, copy the above pattern to access input values from the modal and then, in the try block, do something with the captured data
+slackInteractions.viewSubmission('tonyTestModalSubmit', async (payload) => {
+    // extract input data into variables
+    console.log('Extracting input data');
+
+    try {
+        console.log('Do things with input data');
+    } catch (e) {
+        console.log(e);
+    }
+})
 
 // Handle errors (see `errorCodes` export)
 slackEvents.on('error', console.error);
