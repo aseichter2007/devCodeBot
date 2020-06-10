@@ -1,0 +1,34 @@
+{"search": {
+    "role": "instructor",
+    "request": {
+        "type": "search",
+        "day": 0,
+        "search": "I am trying to find my way home from school"       
+    },
+    "add": {
+        "type": "nearconceptphrase",
+        "id": 12,
+        "name": "the quick brown fox jumps over the lazy dog",
+        "matchTo": "this concept somewhere in the database",
+        "conceptKey": "10",
+        "day": 50
+    },
+    "edit": { 
+        "type": "rearconceptidea",
+        "id": 15,
+        "originalname": "the brown fox",
+        "newname": "thequickBrownfox",
+        "matchto": "",
+        "conceptKey": "",
+        "day": 49
+    },
+    "remove": {
+        "type": "badword",
+        "id": 12,
+        "name": "completely"       
+    },
+    "setting":{
+        "id": 1,
+        "set": true
+    }
+}}    

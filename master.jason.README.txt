@@ -1,0 +1,37 @@
+this is an example of the json we will be passing.  It could be simpler,and this example is full of extra values. 
+
+{"search": {
+    "role": "",   //role should always be populated
+    "username":"",
+    "request": {
+        "type": "",
+        "day": 0,	//for now, day will always be zero untill we sort out date tracking
+        "search": ""       
+    },
+    "add": {		//add and the others will be empty strings unless they are actively in use
+        "type": "",
+        "id": 0,
+        "name": "",
+        "matchTo": "",
+        "conceptKey": "0",
+        "day": 0
+    },
+    "edit": { 
+        "type": "",
+        "id": 0,
+        "originalname": "",
+        "newname": "",
+        "matchto": "",
+        "conceptKey": "",
+        "day": 0
+    },
+    "remove": {
+        "type": "",
+        "id": 0,
+        "name": ""       
+    },
+    "setting":{
+        "id": 0,
+        "set": true
+    }
+}}    
