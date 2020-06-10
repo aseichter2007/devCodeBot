@@ -10,9 +10,6 @@ namespace Repository.Models
         public int NearConceptIdeaId { get; set; }
         public string Title { get; set; }
         public string ProperForm { get; set; }
-
-        [ForeignKey("TimeIndex")]
-        public int TimeId { get; set; }
-        TimeIndex TimeIndex { get; set; }
+        public int Day { get; set; }
     }
 }

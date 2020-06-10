@@ -9,9 +9,6 @@ namespace Repository.Models
     {
         public int PreferredLanguageId { get; set; }
         public string LanguageName { get; set; }
-
-        [ForeignKey("TimeIndex")]
-        public int TimeId { get; set; }
-        TimeIndex TimeIndex { get; set; }
+        public int Day { get; set; }
     }
 }

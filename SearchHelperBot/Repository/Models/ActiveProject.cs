@@ -9,9 +9,6 @@ namespace Repository.Models
     {
         public int ActiveProjectId { get; set; }
         public string ProjectType { get; set; }
-
-        [ForeignKey("TimeIndex")]
-        public int TimeId { get; set; }
-        public TimeIndex TimeIndex { get; set; }
+        public int Day { get; set; }
     }
 }

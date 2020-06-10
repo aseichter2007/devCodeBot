@@ -20,7 +20,6 @@ namespace Repository.Data
         public DbSet<PreferredLanguage> PreferredLanguages { get; set; }
         public DbSet<RawSearch> RawSearches { get; set; }
         public DbSet<Setting> Settings { get; set; }
-        public DbSet<TimeIndex> TimeIndices { get; set; }
         public DbSet<PreferredSearch> PreferredSearches { get; set; }
 
         // constructor
@@ -30,5 +29,21 @@ namespace Repository.Data
         }
 
         // member methods
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    base.OnModelCreating(builder);
+
+        //    builder.Entity<ActiveProject>()
+        //        .HasData(
+        //            new ActiveProject { WeekDayId = -1, Day = "" },
+        //            new WeekDay { WeekDayId = 1, Day = "Monday" },
+        //            new WeekDay { WeekDayId = 2, Day = "Tuesday" },
+        //            new WeekDay { WeekDayId = 3, Day = "Wednesday" },
+        //            new WeekDay { WeekDayId = 4, Day = "Thursday" },
+        //            new WeekDay { WeekDayId = 5, Day = "Friday" },
+        //            new WeekDay { WeekDayId = 6, Day = "Saturday" },
+        //            new WeekDay { WeekDayId = 7, Day = "Sunday" }
+        //        );
+        //}
     }
 }

@@ -59,7 +59,7 @@ namespace SearchHelperBot.Controllers
                 {
                     Outgoing badwordslist = new Outgoing();
                     badwordslist.Responsetype = "badwords";
-                    badwordslist.badWords = _repo.BadWord.FindAll().ToList();
+                    badwordslist.badWords = _repo.BadWords.FindAll().ToList();
                 }
                 else if (incoming.search.request.type == "badphrases")
                 {
@@ -72,25 +72,25 @@ namespace SearchHelperBot.Controllers
                     {
                         BadWord badWord = new BadWord();
                         badWord.Word = incoming.search.add.name;// I badwords and phrases just have a name or phrase. the id will be generated
-                        _repo.BadWord.Create(badWord);
+                        _repo.BadWords.Create(badWord);
                         Outgoing outgoing = new Outgoing();//respond with a list of all badwords for review
                         outgoing.Responsetype = "badwords";
-                        outgoing.badWords = _repo.BadWord.FindAll().ToList();
+                        outgoing.badWords = _repo.BadWords.FindAll().ToList();
                         return outgoing;
                     }
                     else if (incoming.search.add.type == "badphrase")//I am kind of slopy on my cases, whether all lowercase or camel case is is best use in the json, if you decide it should be a particular way, let me know, we just need consistency
                     {
                         BadPhrase badPhrase = new BadPhrase();
                         badPhrase.Phrase = incoming.search.add.name;
-                        _repo.BadPhrase.Create(badPhrase);
+                        _repo.BadPhrases.Create(badPhrase);
                         Outgoing outgoing = new Outgoing();
                         outgoing.Responsetype = "badphrases";
-                        outgoing.badPhrases = _repo.BadPhrase.FindAll().ToList();
+                        outgoing.badPhrases = _repo.BadPhrases.FindAll().ToList();
                         return outgoing;
                     }
                     if (incoming.search.add.type == "nearconceptphrase")//this one is the trickiest cause you need to link the right NearConceptIdea, only if it exists
                     {
-                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdea.FindByCondition(c => c.ProperForm == incoming.search.add.matchTo).SingleOrDefault();//until I am more sure how complex the modals will let things become, shy away from the ids for finding things
+                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(c => c.ProperForm == incoming.search.add.matchTo).SingleOrDefault();//until I am more sure how complex the modals will let things become, shy away from the ids for finding things
                         NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
                         if (nearConceptIdea == null)//not sure how this repo system will return. if it's empty we need to populate its values and add it to the database, then pull it again to get the key to pair the foreign key. 
                         {

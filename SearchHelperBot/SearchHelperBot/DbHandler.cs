@@ -44,9 +44,9 @@ namespace SearchHelperBot
             List<List<string>> searchHelperLists = new List<List<string>>() { preferredLanguage,activeProject,languages,badwords,badphrases,platforms,preferredsearches};
             return searchHelperLists;
         }
-        public List<string> GetPreferredLanguage(int timeid)
+        public List<string> GetPreferredLanguage(int dayId)
         {
-            var preferedLanguage =  _repo.PreferredLanguage.FindByCondition(p => p.TimeId == timeid);
+            var preferedLanguage =  _repo.PreferredLanguages.FindByCondition(p => p.Day == dayId);
 
             List<string> output = new List<string>();
             foreach (var item in preferedLanguage)
@@ -55,9 +55,9 @@ namespace SearchHelperBot
             }
             return output;
         }
-        public List<string> GetActiveProject(int timeid)
+        public List<string> GetActiveProject(int dayId)
         {
-            var preferedLanguage = _repo.ActiveProject.FindByCondition(p => p.TimeId == timeid);
+            var preferedLanguage = _repo.ActiveProjects.FindByCondition(p => p.Day == dayId);
             List<string> output = new List<string>();
             foreach (var item in preferedLanguage)
             {
@@ -67,7 +67,7 @@ namespace SearchHelperBot
         }
         public List<string> GetBadWords()
         {
-            var Badwords = _repo.BadWord.FindAll();
+            var Badwords = _repo.BadWords.FindAll();
             List<string> output = new List<string>();
             foreach (var item in Badwords)
             {
@@ -77,7 +77,7 @@ namespace SearchHelperBot
         }
         public List<string> GetBadPhrases()
         {
-            var badPhrases = _repo.BadPhrase.FindAll();
+            var badPhrases = _repo.BadPhrases.FindAll();
             List<string> output = new List<string>();
             foreach (var item in badPhrases)
             {
@@ -87,7 +87,7 @@ namespace SearchHelperBot
         }
         public List<string> GetPlatforms()
         {
-            var platforms = _repo.Platform.FindAll();
+            var platforms = _repo.Platforms.FindAll();
             List<string> output = new List<string>();
             foreach (var item in platforms)
             {
@@ -97,7 +97,7 @@ namespace SearchHelperBot
         }
         public List<string> GetLanguages()
         {
-            var languages = _repo.Language.FindAll();
+            var languages = _repo.Languages.FindAll();
             List<string> output = new List<string>();
             foreach (var item in languages)
             {
@@ -107,7 +107,7 @@ namespace SearchHelperBot
         }
         public List<string> GetPreferredSearches()
         {
-            var preferredSearches = _repo.PreferredSearch.FindAll();
+            var preferredSearches = _repo.PreferredSearches.FindAll();
             List<string> output = new List<string>();
             foreach (var item in preferredSearches)
             {
@@ -117,11 +117,11 @@ namespace SearchHelperBot
         }
         public Dictionary<string,string> GetNearConcepts(int dayId)
         {
-            var data = _repo.NearConceptIdea.FindByCondition(c => c.TimeId >= dayId||c.TimeId==0);
+            var data = _repo.NearConceptIdeas.FindByCondition(c => c.Day >= dayId||c.Day==0);
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var item in data)
             {
-                var phrases = _repo.NearConceptPhrase.FindByCondition(p => p.ConceptID == item.NearConceptIdeaId);
+                var phrases = _repo.NearConceptPhrases.FindByCondition(p => p.ConceptID == item.NearConceptIdeaId);
                 foreach (var phrase in phrases)
                 {
                     output.Add(phrase.Phrase, item.ProperForm);
@@ -129,6 +129,5 @@ namespace SearchHelperBot
             }
             return output;
         }
-
     }
 }

@@ -9,138 +9,127 @@ namespace Repository
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private ApplicationDbContext _context;
-        private IActiveProjectRepository _activeProject;
-        private IBadPhraseRepository _badPhrase;
-        private IBadWordRepository _badWord;
-        private IInstructorRepository _instructor;
-        private ILanguageRepository _language;
-        private INearConceptIdeaRepository _nearConceptIdea;
-        private INearConceptPhraseRepository _nearConceptPhrase;
-        private IPlatformRepository _platform;
-        private IPreferredLanguageRepository _preferredLanguage;
-        private IRawSearchRepository _rawSearch;
-        private ISettingRepository _setting;
-        private ITimeIndexRepository _timeIndex;
-        private IPreferredSearchRepository _preferredSearch;
+        private IActiveProjectRepository _activeProjects;
+        private IBadPhraseRepository _badPhrases;
+        private IBadWordRepository _badWords;
+        private IInstructorRepository _instructors;
+        private ILanguageRepository _languages;
+        private INearConceptIdeaRepository _nearConceptIdeas;
+        private INearConceptPhraseRepository _nearConceptPhrases;
+        private IPlatformRepository _platforms;
+        private IPreferredLanguageRepository _preferredLanguages;
+        private IRawSearchRepository _rawSearches;
+        private ISettingRepository _settings;
+        private IPreferredSearchRepository _preferredSearches;
 
-        public IPreferredSearchRepository PreferredSearch
+        public IActiveProjectRepository ActiveProjects
+        {
+            get 
+            {
+                if (_activeProjects == null)
+                    _activeProjects = new ActiveProjectRepository(_context);
+                return _activeProjects;
+            }
+        }
+        public IBadPhraseRepository BadPhrases
+        {
+            get 
+            {
+                if (_badPhrases == null)
+                    _badPhrases = new BadPhraseRepository(_context);
+                return _badPhrases;
+            }
+        }
+        public IBadWordRepository BadWords
         {
             get
             {
-                if (_preferredSearch==null)
+                if (_badWords == null)
+                    _badWords = new BadWordRepository(_context);
+                return _badWords;
+            }
+        }
+        public IInstructorRepository Instructors
+        {
+            get
+            {
+                if (_instructors == null)
+                    _instructors = new InstructorRepository(_context);
+                return _instructors;
+            }
+        }
+        public ILanguageRepository Languages
+        {
+            get
+            {
+                if (_languages == null)
+                    _languages = new LanguageRepository(_context);
+                return _languages;
+            }
+        }
+        public INearConceptIdeaRepository NearConceptIdeas
+        {
+            get
+            {
+                if (_nearConceptIdeas == null)
+                    _nearConceptIdeas = new NearConceptIdeaRepository(_context);
+                return _nearConceptIdeas;
+            }
+        }
+        public INearConceptPhraseRepository NearConceptPhrases
+        {
+            get
+            {
+                if (_nearConceptPhrases == null)
+                    _nearConceptPhrases = new NearConceptPhraseRepository(_context);
+                return _nearConceptPhrases;
+            }
+        }
+        public IPlatformRepository Platforms
+        {
+            get
+            {
+                if (_platforms == null)
+                    _platforms = new PlatformRepository(_context);
+                return _platforms;
+            }
+        }
+        public IPreferredLanguageRepository PreferredLanguages
+        {
+            get
+            {
+                if (_preferredLanguages == null)
+                    _preferredLanguages = new PreferredLanguageRepository(_context);
+                return _preferredLanguages;
+            }
+        }
+        public IRawSearchRepository RawSearches
+        {
+            get
+            {
+                if (_rawSearches == null)
+                    _rawSearches = new RawSearchRepository(_context);
+                return _rawSearches;
+            }
+        }
+        public ISettingRepository Settings
+        {
+            get
+            {
+                if (_settings == null)
+                    _settings = new SettingRepository(_context);
+                return _settings;
+            }
+        }
+        public IPreferredSearchRepository PreferredSearches
+        {
+            get
+            {
+                if (_preferredSearches == null)
                 {
-                    _preferredSearch = new PreferredSearchRepository(_context);
+                    _preferredSearches = new PreferredSearchRepository(_context);
                 }
-                return _preferredSearch;
-            }
-        }
-
-        public IActiveProjectRepository ActiveProject
-        {
-            get 
-            {
-                if (_activeProject == null)
-                    _activeProject = new ActiveProjectRepository(_context);
-                return _activeProject;
-            }
-        }
-        public IBadPhraseRepository BadPhrase
-        {
-            get 
-            {
-                if (_badPhrase == null)
-                    _badPhrase = new BadPhraseRepository(_context);
-                return _badPhrase;
-            }
-        }
-        public IBadWordRepository BadWord
-        {
-            get
-            {
-                if (_badWord == null)
-                    _badWord = new BadWordRepository(_context);
-                return _badWord;
-            }
-        }
-        public IInstructorRepository Instructor
-        {
-            get
-            {
-                if (_instructor == null)
-                    _instructor = new InstructorRepository(_context);
-                return _instructor;
-            }
-        }
-        public ILanguageRepository Language
-        {
-            get
-            {
-                if (_language == null)
-                    _language = new LanguageRepository(_context);
-                return _language;
-            }
-        }
-        public INearConceptIdeaRepository NearConceptIdea
-        {
-            get
-            {
-                if (_nearConceptIdea == null)
-                    _nearConceptIdea = new NearConceptIdeaRepository(_context);
-                return _nearConceptIdea;
-            }
-        }
-        public INearConceptPhraseRepository NearConceptPhrase
-        {
-            get
-            {
-                if (_nearConceptPhrase == null)
-                    _nearConceptPhrase = new NearConceptPhraseRepository(_context);
-                return _nearConceptPhrase;
-            }
-        }
-        public IPlatformRepository Platform
-        {
-            get
-            {
-                if (_platform == null)
-                    _platform = new PlatformRepository(_context);
-                return _platform;
-            }
-        }
-        public IPreferredLanguageRepository PreferredLanguage
-        {
-            get
-            {
-                if (_preferredLanguage == null)
-                    _preferredLanguage = new PreferredLanguageRepository(_context);
-                return _preferredLanguage;
-            }
-        }
-        public IRawSearchRepository RawSearch
-        {
-            get
-            {
-                if (_rawSearch == null)
-                    _rawSearch = new RawSearchRepository(_context);
-                return _rawSearch;
-            }
-        }
-        public ISettingRepository Setting
-        {
-            get
-            {
-                if (_setting == null)
-                    _setting = new SettingRepository(_context);
-                return _setting;
-            }
-        }
-        public ITimeIndexRepository TimeIndex
-        {
-            get
-            {
-                if (_timeIndex == null)
-                    _timeIndex = new TimeIndexRepository(_context);
-                return _timeIndex;
+                return _preferredSearches;
             }
         }
         public RepositoryWrapper(ApplicationDbContext context) 

@@ -6,19 +6,18 @@ namespace Repository.Contracts
 {
     public interface IRepositoryWrapper
     {
-        IActiveProjectRepository ActiveProject { get; }
-        IBadPhraseRepository BadPhrase { get; }
-        IBadWordRepository BadWord { get; }
-        IInstructorRepository Instructor { get; }
-        ILanguageRepository Language { get; }
-        INearConceptIdeaRepository NearConceptIdea { get; }
-        INearConceptPhraseRepository NearConceptPhrase { get; }
-        IPlatformRepository Platform { get; }
-        IPreferredLanguageRepository PreferredLanguage { get; }
-        IRawSearchRepository RawSearch { get; }
-        ISettingRepository Setting { get; }
-        ITimeIndexRepository TimeIndex { get; }
-        IPreferredSearchRepository PreferredSearch { get; }
+        IActiveProjectRepository ActiveProjects { get; }
+        IBadPhraseRepository BadPhrases { get; }
+        IBadWordRepository BadWords { get; }
+        IInstructorRepository Instructors { get; }
+        ILanguageRepository Languages { get; }
+        INearConceptIdeaRepository NearConceptIdeas { get; }
+        INearConceptPhraseRepository NearConceptPhrases { get; }
+        IPlatformRepository Platforms { get; }
+        IPreferredLanguageRepository PreferredLanguages { get; }
+        IRawSearchRepository RawSearches { get; }
+        ISettingRepository Settings { get; }
+        IPreferredSearchRepository PreferredSearches { get; }
         void Save();
     }
 }
