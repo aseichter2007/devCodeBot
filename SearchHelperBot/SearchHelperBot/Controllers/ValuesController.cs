@@ -15,31 +15,33 @@ namespace SearchHelperBot.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-
+        // member variables
         private IRepositoryWrapper _repo;
+
+        // constructor
         public ValuesController(IRepositoryWrapper repo)
         {
             _repo = repo;
         }
+
+        // member methods
         // GET: api/<ValuesController>
         [HttpGet]
         public IEnumerable<string> Get()//naked get needs to return TODO: determine if this will ever be used
         {
-
             return new string[] { "value1", "value2" };
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{search}")]
         public  async Task<List<string>> Get(string search )//we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
-        {//or we can get json
-            int day = 0;
+        {                                                   //or we can get json
+            int day = 0;    // will come with search when implemented
             List<string> processedSearches = await ProcessSearch(day, search);
 
             return processedSearches;
         }
-        
-        
+                
         // POST api/<ValuesController>
         //post will be our sole entrypoint and the incoming file will define what happens
         [HttpPost]
@@ -154,16 +156,17 @@ namespace SearchHelperBot.Controllers
         public void Delete(int id)
         {
         }
-        async Task<List<string>> ProcessSearch(int day, string search)
+
+        private async Task<List<string>> ProcessSearch(int day, string search)
         {
             DbHandler dbHandler = new DbHandler(_repo);
+            Task<Dictionary<string, string>> searchHelperDictionaryasync = Task.Run(() => dbHandler.GetNearConcepts(day));
+            Dictionary<string, string> searchHelperDictionary = await searchHelperDictionaryasync;
             Task<List<List<string>>> searchHelperListsasync = Task.Run(() => dbHandler.GetListsSearchParameters(day));
             List<List<string>> searchHelperLists = await searchHelperListsasync;
-            Task<Dictionary<string, string>> searchHelperDicitnoaryasync = Task.Run(() => dbHandler.GetNearConcepts(day));
-            Dictionary<string, string> searchHelperDicitonary = await searchHelperDicitnoaryasync;
-            SearchHelper searchHelper = new SearchHelper(searchHelperLists[0][0], searchHelperLists[1][0], searchHelperLists[2], searchHelperLists[3], searchHelperLists[4], searchHelperLists[5], searchHelperLists[6], searchHelperDicitonary);
-
-
+            SearchHelper searchHelper = new SearchHelper(searchHelperLists[0][0], searchHelperLists[1][0], searchHelperLists[2], 
+                                                         searchHelperLists[3], searchHelperLists[4], searchHelperLists[5], 
+                                                         searchHelperLists[6], searchHelperDictionary);
 
             List<string> optimizedSearches = searchHelper.FinalSearchVariance(search);
             return optimizedSearches;

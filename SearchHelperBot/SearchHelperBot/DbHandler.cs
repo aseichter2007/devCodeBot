@@ -8,12 +8,16 @@ namespace SearchHelperBot
 {
     public class DbHandler
     {
-        //todo tie in database
+        // member variables
         private IRepositoryWrapper _repo;
+
+        // constructor
         public DbHandler(IRepositoryWrapper repo)
         {
             _repo = repo;
         }
+
+        // member methods
         public async Task<List<List<string>>> GetListsSearchParameters(int day)
         {
             var preferredLanguage = GetPreferredLanguage(day);
@@ -24,30 +28,12 @@ namespace SearchHelperBot
             var platforms = GetPlatforms();
             var preferredsearches = GetPreferredSearches();
 
-            //List<string> preferredLanguage = await preferredLanguageasync;
-            //List<string> activeProject = await activeProjectasync;
-            //List<string> languages = await languagesasync;
-            //List<string> badwords = await badwordsasync;
-            //List<string> badphrases = await badphrasesasync;
-            //List<string> platforms = await platformsasync;
-            //List<string> Preferredsearches = await preferredSearchasync;
-
-            if (preferredLanguage.Count<1)
-            {
-                preferredLanguage.Add("c#");
-            }
-            if (activeProject.Count<1)
-            {
-                activeProject.Add("");
-            }
-
-            List<List<string>> searchHelperLists = new List<List<string>>() { preferredLanguage,activeProject,languages,badwords,badphrases,platforms,preferredsearches};
+            List<List<string>> searchHelperLists = new List<List<string>>() { preferredLanguage, activeProject, languages, badwords, badphrases, platforms, preferredsearches};
             return searchHelperLists;
         }
         public List<string> GetPreferredLanguage(int dayId)
         {
-            var preferedLanguage =  _repo.PreferredLanguages.FindByCondition(p => p.Day == dayId);
-
+            var preferedLanguage =  _repo.PreferredLanguages.FindByCondition(p => p.Day >= dayId || p.Day == 0);
             List<string> output = new List<string>();
             foreach (var item in preferedLanguage)
             {
@@ -57,7 +43,7 @@ namespace SearchHelperBot
         }
         public List<string> GetActiveProject(int dayId)
         {
-            var preferedLanguage = _repo.ActiveProjects.FindByCondition(p => p.Day == dayId);
+            var preferedLanguage = _repo.ActiveProjects.FindByCondition(p => p.Day >= dayId || p.Day == 0);
             List<string> output = new List<string>();
             foreach (var item in preferedLanguage)
             {
@@ -117,7 +103,7 @@ namespace SearchHelperBot
         }
         public Dictionary<string,string> GetNearConcepts(int dayId)
         {
-            var data = _repo.NearConceptIdeas.FindByCondition(c => c.Day >= dayId||c.Day==0);
+            var data = _repo.NearConceptIdeas.FindByCondition(c => c.Day >= dayId || c.Day == 0);
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var item in data)
             {

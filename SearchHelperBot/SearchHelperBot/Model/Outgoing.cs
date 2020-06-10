@@ -21,9 +21,5 @@ namespace SearchHelperBot.Model
         public List<Language> languages;
         public List<Platform> platforms;
         public List<RawSearch> rawSearches;
-        
-
-
-
     }
 }
