@@ -40,24 +40,39 @@ slackEvents.on('message', (message, body) => {
     (async () => {
       try {
         // Respond to the message back in the same channel depending on input
-        if (message.text == 'Help') {
-            var block = greeting.greeting(message);
-            var parsedBlock = JSON.parse(block);
-            const response = await web.chat.postMessage(parsedBlock);
-        }
-        if (message.text == 'question card') {
-            var block = qcStart.questionCardStart(message);
-            var parsedBlock = JSON.parse(block);
-            const response = await web.chat.postMessage(parsedBlock);
-        }
-        if (message.text == 'timebox') {
-            var block = timerUp.timerUp(message, unixTimestamp.now('+2m'));
-            var parsedBlock = JSON.parse(block);
-            const immediateResponse = await web.chat.postMessage({ channel: message.channel, text: 'Okay, starting a timer for 30 minutes now!' });
-            const response = await web.chat.scheduleMessage(parsedBlock);
-        }
-        if (message.text == 'cancel timebox') {
-            
+        switch (message.text) {   
+            case 'question card':
+                var block = qcStart.questionCardStart(message);
+                var parsedBlock = JSON.parse(block);
+                let qcResponse = await web.chat.postMessage(parsedBlock);
+                break;
+            case 'timebox':
+                var block = timerUp.timerUp(message, unixTimestamp.now('+2m'));
+                var parsedBlock = JSON.parse(block);
+                var checkIfTimeboxExists = await web.chat.scheduledMessages.list({ channel: message.channel });
+                var timeboxValue = checkIfTimeboxExists.scheduled_messages[0];
+                if ( typeof timeboxValue !== 'undefined' ) {
+                    let oneTimeboxResponse = await web.chat.postMessage({ channel: message.channel, text: 'You can only have one timebox timer running at a time.' });
+                } else {
+                    let immediateResponse = await web.chat.postMessage({ channel: message.channel, text: 'Okay, starting a timer for 30 minutes now!' });
+                    let delayedResponse = await web.chat.scheduleMessage(parsedBlock);
+                }
+                break;
+            case 'cancel timebox':
+                try {
+                    let queuedMessage = await web.chat.scheduledMessages.list({ channel: message.channel, limit: 1 });
+                    let queuedMessageId = queuedMessage.scheduled_messages[0].id;
+                    let deleteMessage = await web.chat.deleteScheduledMessage({ channel: message.channel, scheduled_message_id: queuedMessageId });
+                    let cancelTbResponse = await web.chat.postMessage({ channel: message.channel, text: 'I cancelled your timebox timer!' });
+                } catch (e) {
+                    let cancelTbErrResponse = await web.chat.postMessage({ channel: message.channel, text: 'You don\'t have a timebox timer running right now!' });
+                }
+                break;
+            case 'help':
+                var block = greeting.greeting(message);
+                var parsedBlock = JSON.parse(block);
+                let defaultResponse = await web.chat.postMessage(parsedBlock);
+                break;
         }
       } catch (error) {
         console.log(error.data);
@@ -79,7 +94,7 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
     }
 });
 
-// modal submit functions
+// modal submit function
 slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
     const blockData = payload.view.state;
     const myGoal = blockData.values.myGoalBlock.myGoalResponse.value;

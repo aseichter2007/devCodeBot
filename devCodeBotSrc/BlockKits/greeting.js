@@ -33,6 +33,13 @@ const greeting = (message) => {
 					"type": "mrkdwn",
 					"text": "\`question card\`: this will create a form that you can fill out to request help from your instructors"
 				}
+			},
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": "\`cancel timebox\`: use this to cancel a currently active timebox timer"
+				}
 			}
 		]
 	}`;
