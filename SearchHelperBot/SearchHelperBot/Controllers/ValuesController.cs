@@ -52,67 +52,18 @@ namespace SearchHelperBot.Controllers
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
                 Outgoing searchResult = new Outgoing();
-                searchResult.Searches= await ProcessSearch(day, search);
+                searchResult.searches= await ProcessSearch(day, search);
                 return searchResult;
             }
             else      //if not type student, it must be an instructor
             {
-                if (incoming.search.request.type == "badwords")
+                if (incoming.search.request.type != "add" && incoming.search.request.type != "edit")
                 {
-                    Outgoing badWordsList = new Outgoing();
-                    badWordsList.Responsetype = "badwords";
-                    badWordsList.badWords = _repo.BadWords.FindAll().ToList();
-                    return badWordsList;
+                    return await PostGet(incoming);
                 }
-                else if (incoming.search.request.type == "badphrases")
+                else if (incoming.search.request.type == "add")
                 {
-                    //return list of badPhrases
-                }
-                //continue and serve each list type
-                else if (incoming.search.request.type == "add")//request type can also be crud operations
-                {
-                    if (incoming.search.add.type=="badword")//the search.add.type tells you what type has been requested to be added
-                    {
-                        BadWord badWord = new BadWord();
-                        badWord.Word = incoming.search.add.name;// I badwords and phrases just have a name or phrase. the id will be generated
-                        _repo.BadWords.Create(badWord);
-                        Outgoing outgoing = new Outgoing();//respond with a list of all badwords for review
-                        outgoing.Responsetype = "badwords";
-                        outgoing.badWords = _repo.BadWords.FindAll().ToList();
-                        return outgoing;
-                    }
-                    else if (incoming.search.add.type == "badphrase")//I am kind of slopy on my cases, whether all lowercase or camel case is is best use in the json, if you decide it should be a particular way, let me know, we just need consistency
-                    {
-                        BadPhrase badPhrase = new BadPhrase();
-                        badPhrase.Phrase = incoming.search.add.name;
-                        _repo.BadPhrases.Create(badPhrase);
-                        Outgoing outgoing = new Outgoing();
-                        outgoing.Responsetype = "badphrases";
-                        outgoing.badPhrases = _repo.BadPhrases.FindAll().ToList();
-                        return outgoing;
-                    }
-                    if (incoming.search.add.type == "nearconceptphrase")//this one is the trickiest cause you need to link the right NearConceptIdea, only if it exists
-                    {
-                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(c => c.ProperForm == incoming.search.add.matchTo).SingleOrDefault();//until I am more sure how complex the modals will let things become, shy away from the ids for finding things
-                        NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
-                        if (nearConceptIdea == null)//not sure how this repo system will return. if it's empty we need to populate its values and add it to the database, then pull it again to get the key to pair the foreign key. 
-                        {
-                            nearConceptPhrase.Phrase = incoming.search.add.name;
-                            nearConceptIdea.ProperForm = incoming.search.add.matchTo;//properform is the working string in nearconceptidea.  matchto will have the desired matched search.  I did a terrible job naming these things, sorry. Change them if you like but the keys have to match the json so I will need the exact changes. 
-                        }
-
-                    }
-                    //continue for all types that can be added. I dont think we are using Instructors.cs at this time but until we are sure, dont remove it
-
-
-
-
-
-
-
-                    Outgoing error3 = new Outgoing();
-                    error3.Responsetype = "something went wrong in add";
-                    return error3;
+                    return await PostAdd(incoming);
                 }
                 else if (incoming.search.request.type == "edit")// for request type edit, find the existing database entry, and update it with the incoming values. 
                 {
@@ -126,19 +77,13 @@ namespace SearchHelperBot.Controllers
                     }
                     //contine for all types
 
-
-
                     Outgoing error3 = new Outgoing();
-                    error3.Responsetype = "something went wrong in edit";
+                    error3.responseType = "something went wrong in edit";
                     return error3;
-                }
-                else if (true)
-                {
-
                 }
 
                 Outgoing error2 = new Outgoing();
-                error2.Responsetype = "something went wrong in request check";
+                error2.responseType = "something went wrong in request check";
                 return error2;
             }
             //Outgoing error = new Outgoing();
@@ -171,6 +116,120 @@ namespace SearchHelperBot.Controllers
 
             List<string> optimizedSearches = searchHelper.FinalSearchVariance(search);
             return optimizedSearches;
+        }
+
+        private async Task<Outgoing> PostGet(Incoming incoming)
+        {
+            Outgoing outgoing = new Outgoing();
+
+            outgoing.responseType = incoming.search.request.type;
+
+            switch (incoming.search.request.type)
+            {
+                case "activeprojects":
+                    outgoing.activeProjects = _repo.ActiveProjects.FindAll().ToList();
+                    break;
+                case "badphrases":
+                    outgoing.badPhrases = _repo.BadPhrases.FindAll().ToList();
+                    break;
+                case "badwords":
+                    outgoing.badWords = _repo.BadWords.FindAll().ToList();
+                    break;
+                case "instructors":
+                    break;
+                case "languages":
+                    outgoing.languages = _repo.Languages.FindAll().ToList();
+                    break;
+                case "nearconceptideas":
+                    outgoing.nearConceptIdeas = _repo.NearConceptIdeas.FindAll().ToList();
+                    break;
+                case "nearconceptphrases":
+                    outgoing.nearConceptPhrases = _repo.NearConceptPhrases.FindAll().ToList();
+                    break;
+                case "platforms":
+                    outgoing.platforms = _repo.Platforms.FindAll().ToList();
+                    break;
+                case "preferredlanguages":
+                    outgoing.preferredLanguages = _repo.PreferredLanguages.FindAll().ToList();
+                    break;
+                case "preferredsearches":
+                    outgoing.preferredSearches = _repo.PreferredSearches.FindAll().ToList();
+                    break;
+                case "rawsearches":
+                    outgoing.rawSearches = _repo.RawSearches.FindAll().ToList();
+                    break;
+                case "settings":
+                    outgoing.settings = _repo.Settings.FindAll().ToList();
+                    break;
+                default:
+                    outgoing.responseType = "something went wrong in get";
+                    break;
+            }
+            return outgoing;
+        }
+
+        private async Task<Outgoing> PostAdd(Incoming incoming)
+        {
+            Outgoing outgoing = new Outgoing();
+
+            outgoing.responseType = incoming.search.request.type;
+
+            switch (incoming.search.add.type)
+            {
+                case "activeprojects":
+                    outgoing.activeProjects = _repo.ActiveProjects.FindAll().ToList();
+                    break;
+                case "badphrases":
+                    BadPhrase badPhrase = new BadPhrase();
+                    badPhrase.Phrase = incoming.search.add.name;
+                    _repo.BadPhrases.Create(badPhrase);
+                    incoming.search.request.type = incoming.search.add.type;
+                    return await PostGet(incoming);
+                    break;
+                case "badwords":
+                    BadWord badWord = new BadWord();
+                    badWord.Word = incoming.search.add.name;
+                    _repo.BadWords.Create(badWord);
+                    incoming.search.request.type = incoming.search.add.type;
+                    return await PostGet(incoming);
+                    break;
+                case "instructors":
+                    break;
+                case "languages":
+                    outgoing.languages = _repo.Languages.FindAll().ToList();
+                    break;
+                case "nearconceptideas":
+                    outgoing.nearConceptIdeas = _repo.NearConceptIdeas.FindAll().ToList();
+                    break;
+                case "nearconceptphrases":
+                    NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(c => c.ProperForm == incoming.search.add.matchTo).SingleOrDefault();//until I am more sure how complex the modals will let things become, shy away from the ids for finding things
+                    NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
+                    if (nearConceptIdea == null)//not sure how this repo system will return. if it's empty we need to populate its values and add it to the database, then pull it again to get the key to pair the foreign key. 
+                    {
+                        nearConceptPhrase.Phrase = incoming.search.add.name;
+                        nearConceptIdea.ProperForm = incoming.search.add.matchTo;//properform is the working string in nearconceptidea.  matchto will have the desired matched search.  I did a terrible job naming these things, sorry. Change them if you like but the keys have to match the json so I will need the exact changes. 
+                    }
+                    break;
+                case "platforms":
+                    outgoing.platforms = _repo.Platforms.FindAll().ToList();
+                    break;
+                case "preferredlanguages":
+                    outgoing.preferredLanguages = _repo.PreferredLanguages.FindAll().ToList();
+                    break;
+                case "preferredsearches":
+                    outgoing.preferredSearches = _repo.PreferredSearches.FindAll().ToList();
+                    break;
+                case "rawsearches":
+                    outgoing.rawSearches = _repo.RawSearches.FindAll().ToList();
+                    break;
+                case "settings":
+                    outgoing.settings = _repo.Settings.FindAll().ToList();
+                    break;
+                default:
+                    outgoing.responseType = "something went wrong in add";
+                    break;
+            }
+            return outgoing;
         }
     }
 }

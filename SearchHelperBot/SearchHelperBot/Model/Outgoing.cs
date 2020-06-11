@@ -10,18 +10,18 @@ namespace SearchHelperBot.Model
     // so can create a selectlist on the frontend for user to choose what to edit or delete
     public class Outgoing
     {
-        public string Responsetype;
-        public List<string> Searches;
+        public string responseType;
+        public List<string> searches;
         public List<ActiveProject> activeProjects;
+        public List<BadPhrase> badPhrases;
+        public List<BadWord> badWords;
+        public List<Language> languages;
+        public List<NearConceptIdea> nearConceptIdeas;
+        public List<NearConceptPhrase> nearConceptPhrases;
+        public List<Platform> platforms;
         public List<PreferredLanguage> preferredLanguages;
         public List<PreferredSearch> preferredSearches;
-        public List<Setting> settings;
-        public List<BadWord> badWords;
-        public List<BadPhrase> badPhrases;
-        public List<NearConceptIdea> conceptideas;
-        public List<NearConceptPhrase> conceptPhrases;
-        public List<Language> languages;
-        public List<Platform> platforms;
         public List<RawSearch> rawSearches;
+        public List<Setting> settings;
     }
 }

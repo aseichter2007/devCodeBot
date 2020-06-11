@@ -13,19 +13,23 @@
         public Add add { get; set; }
         public Edit edit { get; set; }
         public Remove remove { get; set; }
-        public Setting setting { get; set; }
+        public iSetting setting { get; set; }
     }
 
     public class Request
     {
-        public string type { get; set; }		// "badwords"
+        public string type { get; set; }		// "activeprojects", "badphrases", "badwords", "instructors", "languages", 
+                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
+                                                // "preferredsearches", "rawsearches", "settings", "add", "edit"
         public int day { get; set; }
         public string search { get; set; }		// user search request
     }
 
     public class Add
     {
-        public string type { get; set; }
+        public string type { get; set; }        // "activeprojects", "badphrases", "badwords", "instructors", "languages", 
+                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
+                                                // "preferredsearches", "rawsearches", "settings"
         public int id { get; set; }
         public string name { get; set; }
         public string matchTo { get; set; }
@@ -51,7 +55,7 @@
         public string name { get; set; }
     }
 
-    public class Setting
+    public class iSetting
     {
         public int id { get; set; }
         public bool set { get; set; }
