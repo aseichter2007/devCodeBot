@@ -24,7 +24,7 @@ const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
 const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to see how I handle input data from the modal and posting it back to the instructor chat. You will need to create your own file similar to this one to post the payload back to your API
 const tonyTestStart = require('./BlockKits/tonyTestStart'); // TONY: This pulls in the function from the specified file to be used below
-const tonyTestModal = require('./BlockKits.tonyTestModal'); // TONY: This file contains the actual modal block
+//const tonyTestModal = require('./BlockKits.tonyTestModal'); // TONY: This file contains the actual modal block
 
 // configure express server for development
 app.use('/slack/actions', slackInteractions.expressMiddleware());

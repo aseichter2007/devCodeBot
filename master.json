@@ -1,5 +1,6 @@
 {"search": {
     "role": "instructor",
+    "username":"name",
     "request": {
         "type": "search",
         "day": 0,

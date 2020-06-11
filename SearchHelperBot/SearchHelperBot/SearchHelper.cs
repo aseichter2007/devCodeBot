@@ -88,7 +88,7 @@ namespace SearchHelperBot
         /// <param name="platforms"></param>
         /// <param name="preferreddSearches"></param>
         /// <param name="nearConcepts"></param>
-        public SearchHelper(string preferredLanguage, string activeProject, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms, List<string> preferreddSearches, Dictionary<string, string> nearConcepts)
+        public SearchHelper(string preferredLanguage, string activeProject, List<string> languages, List<string> badwords, List<string> badphrases, List<string> platforms, List<string> preferreddSearches, Dictionary<string, string> nearConcepts, char splitchar)
         {
             this.preferredLanguage = preferredLanguage;
             this.languages = languages;
@@ -98,6 +98,7 @@ namespace SearchHelperBot
             preferredSearches = preferreddSearches;
             this.nearConcepts = nearConcepts;
             this.activeProject = activeProject;
+            this.splitchar = splitchar;
         }
         /// <summary>
         /// returns an array of optimized searches from input appended with each preferred search site appended
