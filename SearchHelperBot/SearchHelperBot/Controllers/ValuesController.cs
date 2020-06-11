@@ -37,7 +37,8 @@ namespace SearchHelperBot.Controllers
         public  async Task<List<string>> Get(string search )//we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
         {                                                   //or we can get json
             int day = 0;    // will come with search when implemented
-            List<string> processedSearches = await ProcessSearch(day, search);
+            char split = '_';//urls cannot contain spaces, this sets the split charachter in SearchHelper.cs
+            List<string> processedSearches = await ProcessSearch(day, search, split);
 
             return processedSearches;
         }
@@ -52,7 +53,8 @@ namespace SearchHelperBot.Controllers
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
                 Outgoing searchResult = new Outgoing();
-                searchResult.searches= await ProcessSearch(day, search);
+                char split = ' ';//Searchhelper now reqires the split characher to pass in so that it can work with both plaintest strings from post and url formatted string which cannot contain spaces.
+                searchResult.searches= await ProcessSearch(day, search, split);
                 return searchResult;
             }
             else      //if not type student, it must be an instructor
@@ -103,7 +105,7 @@ namespace SearchHelperBot.Controllers
         {
         }
 
-        private async Task<List<string>> ProcessSearch(int day, string search)
+        private async Task<List<string>> ProcessSearch(int day, string search, char split)
         {
             DbHandler dbHandler = new DbHandler(_repo);
             Task<Dictionary<string, string>> searchHelperDictionaryasync = Task.Run(() => dbHandler.GetNearConcepts(day));
@@ -112,7 +114,7 @@ namespace SearchHelperBot.Controllers
             List<List<string>> searchHelperLists = await searchHelperListsasync;
             SearchHelper searchHelper = new SearchHelper(searchHelperLists[0][0], searchHelperLists[1][0], searchHelperLists[2], 
                                                          searchHelperLists[3], searchHelperLists[4], searchHelperLists[5], 
-                                                         searchHelperLists[6], searchHelperDictionary);
+                                                         searchHelperLists[6], searchHelperDictionary, split);
 
             List<string> optimizedSearches = searchHelper.FinalSearchVariance(search);
             return optimizedSearches;
