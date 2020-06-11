@@ -19,8 +19,8 @@
     public class Request
     {
         public string type { get; set; }		// "activeprojects", "badphrases", "badwords", "instructors", "languages", 
-                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
-                                                // "preferredsearches", "rawsearches", "settings", "add", "edit"
+                                                // "nearconcepts", "platforms", "preferredlanguages", "preferredsearches", 
+                                                // "rawsearches", "settings", "add", "edit"
         public int day { get; set; }
         public string search { get; set; }		// user search request
     }
@@ -28,8 +28,8 @@
     public class Add
     {
         public string type { get; set; }        // "activeprojects", "badphrases", "badwords", "instructors", "languages", 
-                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
-                                                // "preferredsearches", "rawsearches", "settings"
+                                                // "nearconcepts", "platforms", "preferredlanguages", "preferredsearches", 
+                                                // "rawsearches", "settings"
         public int id { get; set; }
         public string name { get; set; }
         public string matchTo { get; set; }

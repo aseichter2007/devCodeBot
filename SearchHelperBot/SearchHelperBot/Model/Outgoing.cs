@@ -15,13 +15,21 @@ namespace SearchHelperBot.Model
         public List<ActiveProject> activeProjects;
         public List<BadPhrase> badPhrases;
         public List<BadWord> badWords;
+        public List<Instructor> instructors;
         public List<Language> languages;
-        public List<NearConceptIdea> nearConceptIdeas;
-        public List<NearConceptPhrase> nearConceptPhrases;
+        public List<NearConcept> nearConcepts;
         public List<Platform> platforms;
         public List<PreferredLanguage> preferredLanguages;
         public List<PreferredSearch> preferredSearches;
         public List<RawSearch> rawSearches;
         public List<Setting> settings;
+    }
+
+    // NearConceptIdea and NearConceptPhrase are single class outside of database
+    public class NearConcept
+    {
+        public string Phrase { get; set; }          // From Phrase
+        public string ProperForm { get; set; }      // From Idea
+        public int Day { get; set; }                // From Idea
     }
 }
