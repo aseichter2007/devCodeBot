@@ -29,7 +29,7 @@ namespace SearchHelperBot
         List<string> platforms;
         List<string> preferredSearches;
         Dictionary<string, string> nearConcepts;
-        char splitchar = '_';
+        char splitchar = ' ';
         /// <summary>
         /// using values from SearchHelperConfiguration.cs
         /// </summary>
