@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Repository.Contracts;
 using Repository.Models;
 using SearchHelperBot.Model;
@@ -46,7 +47,7 @@ namespace SearchHelperBot.Controllers
         // POST api/<ValuesController>
         // POST will be our sole entrypoint and the incoming file will define what happens
         [HttpPost]
-        public async Task<Outgoing> Post([FromBody] Incoming incoming)
+        public async Task<string> Post([FromBody] Incoming incoming)//changed output to strings
         {
             if (incoming.search.role == "student")    // basic search
             {
@@ -57,26 +58,36 @@ namespace SearchHelperBot.Controllers
                 // Searchhelper requires the split characher to be passed in so that it can work with both plaintest strings from post 
                 // and url formatted string which cannot contain spaces.
                 char split = ' ';
+                searchResult.responseType = "search";
                 searchResult.searches = await ProcessSearch(day, search, split);
-                return searchResult;
+                string result = JsonConvert.SerializeObject(searchResult);
+                return result;
             }
             else      //if not type student, it must be an instructor - manage database
             {
                 if (incoming.search.request.type == "add")
                 {
-                    return await PostAdd(incoming);
+                    Outgoing addResult = await PostAdd(incoming);
+                    string result = JsonConvert.SerializeObject(addResult);
+                    return result;
                 }
                 else if (incoming.search.request.type == "edit")
                 {
-                    return await PostPut(incoming);
+                    Outgoing editResult = await PostPut(incoming);
+                    string result = JsonConvert.SerializeObject(editResult);
+                    return result;
                 }
                 else if (incoming.search.request.type == "remove")
                 {
-                    return await PostDelete(incoming);
+                    Outgoing removeResult = await PostDelete(incoming);
+                    string result = JsonConvert.SerializeObject(removeResult);
+                    return result;
                 }
                 else
                 {
-                    return await PostGet(incoming);
+                    Outgoing getResult = await PostGet(incoming);
+                    string result = JsonConvert.SerializeObject(getResult);
+                    return result;
                 }
             }
         }
@@ -118,18 +129,27 @@ namespace SearchHelperBot.Controllers
             {
                 case "activeprojects":
                     outgoing.activeProjects = _repo.ActiveProjects.FindAll().ToList();
+                    outgoing.responseType = "activeprojects";
                     break;
                 case "badphrases":
                     outgoing.badPhrases = _repo.BadPhrases.FindAll().ToList();
+                    outgoing.responseType = "badphrases";
+
                     break;
                 case "badwords":
                     outgoing.badWords = _repo.BadWords.FindAll().ToList();
+                    outgoing.responseType = "badwords";
+
                     break;
                 case "instructors":
                     outgoing.instructors = _repo.Instructors.FindAll().ToList();
+                    outgoing.responseType = "instructors";
+
                     break;
                 case "languages":
                     outgoing.languages = _repo.Languages.FindAll().ToList();
+                    outgoing.responseType = "languages";
+
                     break;
                 case "nearconceptideas":  // returns NearConceptIdeas in NearConcept form.
                     {
@@ -144,6 +164,8 @@ namespace SearchHelperBot.Controllers
                             nearConcepts.Add(nearConcept);
                         }
                         outgoing.nearConcepts = nearConcepts;
+                        outgoing.responseType = "nearConceptideas";
+
                     }
                     break;
                 case "nearconcepts":
@@ -161,25 +183,38 @@ namespace SearchHelperBot.Controllers
                             nearConcepts.Add(nearConcept);
                         }
                         outgoing.nearConcepts = nearConcepts;
+                        outgoing.responseType = "nearconceptPhrases";
+
                     }
                     break;
                 case "platforms":
                     outgoing.platforms = _repo.Platforms.FindAll().ToList();
+                    outgoing.responseType = "platforms";
+
                     break;
                 case "preferredlanguages":
                     outgoing.preferredLanguages = _repo.PreferredLanguages.FindAll().ToList();
+                    outgoing.responseType = "preferredlanguages";
+
                     break;
                 case "preferredsearches":
                     outgoing.preferredSearches = _repo.PreferredSearches.FindAll().ToList();
+                    outgoing.responseType = "preferredsearches";
+
                     break;
                 case "rawsearches":
                     outgoing.rawSearches = _repo.RawSearches.FindAll().ToList();
+                    outgoing.responseType = "rawsearches";
+
                     break;
                 case "settings":
                     outgoing.settings = _repo.Settings.FindAll().ToList();
+                    outgoing.responseType = "settings";
+
                     break;
                 default:
-                    outgoing.responseType = "something went wrong in get";
+                    outgoing.responseType = "something went wrong in get";                    
+
                     break;
             }
             return outgoing;
