@@ -1,7 +1,7 @@
 function CrudBuilder(params) {
 //need to know more about incoming json from api server to move forwarard
 
-    var block = 
+    var blockpart1 = 
     `{
         "type": "modal",
         "submit": {
@@ -33,20 +33,23 @@ function CrudBuilder(params) {
                         "emoji": true
                     },
                     "options": [
-                        `+
-                        params.forEach(element => {
-                            `{
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "${element["value"]}",  ${/*this is not complete need to verify incoming json format*/null}
-                                    "emoji": true
-                                },
-                                "value": "value-0"
-                            },`
-                        });
-                        
-                        `
-                        
+                        `;
+
+var options = []
+    params.forEach(element => {
+        options.concat(
+        `{
+            "text": {
+                "type": "plain_text",
+                "text": "${element["value"]}",  ${/*this is not complete need to verify incoming json format*/null}
+                "emoji": true
+            },
+            "value": "value-0"
+        },`)
+    });
+    
+    blockend= 
+    ` 
                         {
                             "text": {
                                 "type": "plain_text",

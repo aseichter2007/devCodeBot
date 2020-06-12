@@ -21,6 +21,8 @@
     "@slack/events-api": "^2.3.3",
     "@slack/interactive-messages": "^1.6.0",
     "@slack/web-api": "^5.10.0",
-    "dotenv": "^8.2.0"
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "unix-timestamp": "^0.2.0"
   }
 }

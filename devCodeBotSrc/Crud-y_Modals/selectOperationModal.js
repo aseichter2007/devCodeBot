@@ -4,6 +4,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
     "private_metadata": "${caller}",
     "trigger_id": "${trigger}",
     "view":{
+        "type": "modal",
         "callback_id": "manageactionselect",
         "title": {
             "type": "plain_text",
@@ -23,9 +24,10 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
         "blocks": [
             {
                 "type": "input",
+                "block_id": "selectAction",
                 "element": {
                     "type": "static_select",
-                    "block_id": "selectAction",
+                    "action_id": "manageactionselected",
                     "placeholder": {
                         "type": "plain_text",
                         "text": "Select an action",
@@ -43,7 +45,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "*View and manage active project. ex: 'asp.net MVC' *",
+                                "text": "*View and manage active project.*",
                                 "emoji": true
                             },
                             "value": "activeproject"
@@ -51,7 +53,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "*View and manage preferred language. ex: 'c#', 'javascript'*",
+                                "text": "*View and manage preferred language.*",
                                 "emoji": true
                             },
                             "value": "preferredlanguage"
@@ -83,7 +85,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "*View and manage platforms. ex: '.net', 'asp.net MVC'*",
+                                "text": "*View and manage platforms.*",
                                 "emoji": true
                             },
                             "value": "platforms"
@@ -91,10 +93,10 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "*View and manage languages. ex: 'c#'*",
+                                "text": "*View and manage languages.",
                                 "emoji": true
                             },
-                            "value": "value-7"
+                            "value": "languages"
                         }
                     ]
                 },
@@ -105,7 +107,6 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                 }
             }
         ]
-        "type": "modal",
     }
 }`
 return block;

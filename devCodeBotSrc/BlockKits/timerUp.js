@@ -1,4 +1,4 @@
-const DbAcess = (message) => {
+const timerUp = (message, time) => {
 	var block = 
 	`{
         "channel": "${message.channel}",
@@ -7,22 +7,23 @@ const DbAcess = (message) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Would you like to manage the database?"
+                    "text": "30 minutes have passed! :clock1: Would you like to submit a question card to the instructors?"
                 },
                 "accessory": {
                     "type": "button",
                     "text": {
                         "type": "plain_text",
-                        "text": "Manage Database",
+                        "text": "Create question card",
                         "emoji": true
                     },
                     "value": "click_me_123"
                 }
             }
         ],
-        "action-id": "selectoperation"
+        "action-id": "launchQuestionCardModal",
+        "post_at": "${time}"
     }`;
 	return block;
 }
 
-exports.DbAcess = DbAcess;
+exports.timerUp = timerUp;

@@ -1,4 +1,4 @@
-const questionCardPost = (goal, problem, attempts, user, channel) => {
+const questionCardPost = (goal, problem, attempts, user, channel, replyChannel) => {
 	var block = 
 	`{
         "channel": "${channel}",
@@ -7,7 +7,7 @@ const questionCardPost = (goal, problem, attempts, user, channel) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": ":email: Question card submitted by *${user}*"
+                    "text": ":email: Question card submitted by <https://slack.com/app_redirect?channel=${replyChannel} | *${user}*>"
                 }
             },
             {

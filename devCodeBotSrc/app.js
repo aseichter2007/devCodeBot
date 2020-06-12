@@ -8,6 +8,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = process.env.PORT;
 
+// custom npm packages for functionality
+const unixTimestamp = require('unix-timestamp');
+
 // create adapters for Slack APIs
 const { createEventAdapter } = require('@slack/events-api');
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
@@ -23,10 +26,14 @@ const greeting = require('./BlockKits/greeting');
 const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
 const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to see how I handle input data from the modal and posting it back to the instructor chat. You will need to create your own file similar to this one to post the payload back to your API
-const tonyTestStart = require('./BlockKits/tonyTestStart'); // TONY: This pulls in the function from the specified file to be used below
+const timerUp = require('./BlockKits/timerUp');
 const selectOperationModal = require('./Crud-Y_Modals/selectOperationModal'); // TONY: This file contains the actual modal block
 const basicSearchReturn = require('./Crud-y_Modals/BasicSearchReturn')
+const testblock = require('./Crud-y_Modals/cruddyprototye')
+const dbaccess = require('./Crud-y_Modals/DbAccess.js');
 
+
+//tony includes
 const axios = require("axios");
 const myaxios = require('./Crud-y_Modals/axiosmethods');
 const jsonbuilder = require('./Crud-y_Modals/jsonbuilder');
@@ -49,32 +56,61 @@ slackEvents.on('message', (message, body) => {
     (async () => {
       try {
         // Respond to the message back in the same channel depending on input
-        if (message.text == 'Help') {
-            var block = greeting.greeting(message);
-            var parsedBlock = JSON.parse(block);
-            const response = await web.chat.postMessage(parsedBlock);
-        }
-        if (message.text == 'question card') {
-            var block = qcStart.questionCardStart(message);
-            var parsedBlock = JSON.parse(block);
-                const response = await web.chat.postMessage(parsedBlock);
-        }
-        // TONY: typing 'tony test' will run this and return the contents of the tonyTestStart file
-        if (message.text == 'tony test') {//I'm pretty sure there is a contains method
-            //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
-            //var thisresponse = myaxios.AxiosPostRequest()
+        if (typeof message.bot_id === 'undefined') {
+            switch (message.text) {   
+                case 'question card':
+                    var block = qcStart.questionCardStart(message);
+                    var parsedBlock = JSON.parse(block);
+                    let qcResponse = await web.chat.postMessage(parsedBlock);
+                    break;
+                case 'timebox':
+                    var block = timerUp.timerUp(message, unixTimestamp.now('+2m'));
+                    var parsedBlock = JSON.parse(block);
+                    var checkIfTimeboxExists = await web.chat.scheduledMessages.list({ channel: message.channel });
+                    var timeboxValue = checkIfTimeboxExists.scheduled_messages[0];
+                    if ( typeof timeboxValue !== 'undefined' ) {
+                        let oneTimeboxResponse = await web.chat.postMessage({ channel: message.channel, text: 'You can only have one timebox timer running at a time.' });
+                    } else {
+                        let immediateResponse = await web.chat.postMessage({ channel: message.channel, text: 'Okay, starting a timer for 30 minutes now!' });
+                        let delayedResponse = await web.chat.scheduleMessage(parsedBlock);
+                    }
+                    break;
+                case 'cancel timebox':
+                    try {
+                        let queuedMessage = await web.chat.scheduledMessages.list({ channel: message.channel, limit: 1 });
+                        let queuedMessageId = queuedMessage.scheduled_messages[0].id;
+                        let deleteMessage = await web.chat.deleteScheduledMessage({ channel: message.channel, scheduled_message_id: queuedMessageId });
+                        let cancelTbResponse = await web.chat.postMessage({ channel: message.channel, text: 'I cancelled your timebox timer!' });
+                    } catch (e) {
+                        let cancelTbErrResponse = await web.chat.postMessage({ channel: message.channel, text: 'You don\'t have a timebox timer running right now!' });
+                    }
+                    break;
+                case 'help':
+                    var block = greeting.greeting(message);
+                    var parsedBlock = JSON.parse(block);
+                    let defaultResponse = await web.chat.postMessage(parsedBlock);
+                    break;
 
-            //send the default case to meeeeeeeeeeee.
-            var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
-            var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
-            var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
-            const response = await web.chat.postMessage(parsedBlock);
-
-             // postMessage(parsedBlock) accepts the entire JSON payload from tonyTestStart and pushes it to the chat window in Slack
+                case 'manage':
+                     var block = dbaccess.DbAcess(message);
+                     var parsedBlock = JSON.parse(block);
+                     const manageresponse = await web.chat.postMessage(parsedBlock)
+                    break;
+                default:
+                    //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
+                    //var thisresponse = myaxios.AxiosPostRequest()
+                    //send the default case to meeeeeeeeeeee.
+                    var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
+                    var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
+                    var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
+                    const response = await web.chat.postMessage(parsedBlock);
+                    // postMessage(parsedBlock) accepts the entire JSON payload from basicsearch and pushes it to the chat window in Slack
+                    break;
+            }
         }
-      } catch (error) {
+    } catch (error) {
         console.log(error.data);
-      }
+    }
     })();
 });
 
@@ -83,7 +119,7 @@ slackEvents.on('message', (message, body) => {
 // interactivity functions
 slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
     try {
-        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id));
+        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
         await web.views.open( openModal );
     } catch (e) {
         console.log(e);
@@ -94,15 +130,49 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
     }
 });
 
-// TONY: interactivity function: invoked when the button is clicked from the first message sent from tonyTestStart()
-function getpost(){
+// TONY: interactivity function:
+slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
+    try {
+        //call manage selection modal
+        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
+        var openModal = JSON.parse(block);
+        await web.views.open( openModal );
 
-    var input = jsonbuilder.buildmyjson()
-    var output = myaxios.AxiosPostRequest(input)
-}
+    } catch (e) {
+        console.log(e);
+    }
+});
 
+//tony modal calls
+slackInteractions.action({"action-id": "manageactionselected" }, async (payload) =>{
+    try {
 
+        //testing prototype crud modal 
+        var block = testblock.testblockdonotupvote(payload.trigger_id);
+        var openModal = JSON.parse(block);
+        await web.views.open( openModal );
 
+    } catch (e) {
+        console.log(e);
+    }
+});
+slackInteractions.viewSubmission('manageactionselect', async (payload) => {
+
+    var trigger = payload.trigger_id;
+    var actionselect = payload.view.state.values.selectAction.manageactionselected.selected_option.value;
+    var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, no, 0, "no", "no", "no", 0, false, 0)
+
+    var gettingdata = axios.post('http://localhost:58685/api/values/'[postdata])
+    var databack = gettingdata;
+
+    try {
+        
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+//I dont think I am using this currently but better safe than sorry
 slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) => {
     try {
         var openTonyModal = JSON.parse(tonyTestModal.tonyTestModal(/*Your parameters to send in from the payload */)); // This prepares the modal in JSON format
@@ -114,7 +184,7 @@ slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) 
     return {
         text: 'Processing...'
     }
-})
+});
 
 // new funciton
 
@@ -126,10 +196,9 @@ slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
     const myAttempts = blockData.values.myAttemptsBlock.myAttemptsResponse.value;
 
     try {
-        const msg = JSON.parse(qcPost.questionCardPost(myGoal, myProblem, myAttempts, payload.user.name, instructorChannel));
+        const msg = JSON.parse(qcPost.questionCardPost(myGoal, myProblem, myAttempts, payload.user.name, instructorChannel, payload.user.id));
         const response = await web.chat.postMessage(msg);
-        // Below is not currently working; idea is to post validation back to user that the message was sent. Need to find a clever way to access current channel ID
-        // const verification = await web.chat.postMessage({channel: channel.id!?, text: 'Your card has been submitted and will be reviewed by your instructors.'});
+        const verification = await web.chat.postMessage({channel: payload.view.private_metadata, text: 'Your card has been submitted and will be reviewed by your instructors.'});
     } catch (e) {
         console.log(e);
     }
