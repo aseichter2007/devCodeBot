@@ -19,8 +19,9 @@
     public class Request
     {
         public string type { get; set; }		// "activeprojects", "badphrases", "badwords", "instructors", "languages", 
-                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
-                                                // "preferredsearches", "rawsearches", "settings", "add", "edit"
+                                                // "nearconcepts", "nearconceptideas", nearconceptphrases", "platforms", 
+                                                // "preferredlanguages", "preferredsearches", "rawsearches", "settings", 
+                                                // "add", "edit", "remove"
         public int day { get; set; }
         public string search { get; set; }		// user search request
     }
@@ -28,18 +29,20 @@
     public class Add
     {
         public string type { get; set; }        // "activeprojects", "badphrases", "badwords", "instructors", "languages", 
-                                                // "nearconceptideas", "nearconceptphrases", "platforms", "preferredlanguages", 
-                                                // "preferredsearches", "rawsearches", "settings"
+                                                // "nearconcepts", "nearconceptideas", nearconceptphrases", "platforms", 
+                                                // "preferredlanguages", "preferredsearches", "rawsearches", "settings"
         public int id { get; set; }
         public string name { get; set; }
-        public string matchTo { get; set; }
+        public string matchTo { get; set; }     // NearConceptIdea to match to.
         public string conceptKey { get; set; }
         public int day { get; set; }
     }
 
     public class Edit
     {
-        public string type { get; set; }
+        public string type { get; set; }    // "activeprojects", "badphrases", "badwords", "instructors", "languages", 
+                                            // "nearconcepts", "nearconceptideas", nearconceptphrases", "platforms", 
+                                            // "preferredlanguages", "preferredsearches", "rawsearches", "settings"
         public int id { get; set; }
         public string originalname { get; set; }
         public string newname { get; set; }
@@ -50,7 +53,9 @@
 
     public class Remove
     {
-        public string type { get; set; }
+        public string type { get; set; }    // "activeprojects", "badphrases", "badwords", "instructors", "languages", 
+                                            // "nearconcepts", "nearconceptideas", nearconceptphrases", "platforms", 
+                                            // "preferredlanguages", "preferredsearches", "rawsearches", "settings"
         public int id { get; set; }
         public string name { get; set; }
     }

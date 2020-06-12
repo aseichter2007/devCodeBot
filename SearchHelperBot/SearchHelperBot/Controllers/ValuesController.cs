@@ -27,15 +27,15 @@ namespace SearchHelperBot.Controllers
         // member methods
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()//naked get needs to return TODO: determine if this will ever be used
+        public IEnumerable<string> Get()    //not used
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "Get()", "Not Used" };
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{search}")]
-        public  async Task<List<string>> Get(string search )//we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
-        {                                                   //or we can get json
+        public  async Task<List<string>> Get(string search )    //we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
+        {                                                       //or we can get json
             int day = 0;    // will come with search when implemented
             char split = '_';//urls cannot contain spaces, this sets the split charachter in SearchHelper.cs
             List<string> processedSearches = await ProcessSearch(day, search, split);
@@ -48,60 +48,48 @@ namespace SearchHelperBot.Controllers
         [HttpPost]
         public async Task<Outgoing> Post([FromBody] Incoming incoming)
         {
-            if (incoming.search.role=="student")    // basic search
+            if (incoming.search.role == "student")    // basic search
             {
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
                 Outgoing searchResult = new Outgoing();
-                char split = ' ';//Searchhelper now reqires the split characher to pass in so that it can work with both plaintest strings from post and url formatted string which cannot contain spaces.
-                searchResult.searches= await ProcessSearch(day, search, split);
+
+                // Searchhelper requires the split characher to be passed in so that it can work with both plaintest strings from post 
+                // and url formatted string which cannot contain spaces.
+                char split = ' ';
+                searchResult.searches = await ProcessSearch(day, search, split);
                 return searchResult;
             }
-            else      //if not type student, it must be an instructor
+            else      //if not type student, it must be an instructor - manage database
             {
-                if (incoming.search.request.type != "add" && incoming.search.request.type != "edit")
-                {
-                    return await PostGet(incoming);
-                }
-                else if (incoming.search.request.type == "add")
+                if (incoming.search.request.type == "add")
                 {
                     return await PostAdd(incoming);
                 }
-                else if (incoming.search.request.type == "edit")// for request type edit, find the existing database entry, and update it with the incoming values. 
+                else if (incoming.search.request.type == "edit")
                 {
-                    if (incoming.search.edit.type == "badword")
-                    {
-                        BadWord badWord;//find in database and update values
-                    }
-                    else if (incoming.search.edit.type == "badphrase")
-                    {
-
-                    }
-                    //contine for all types
-
-                    Outgoing error3 = new Outgoing();
-                    error3.responseType = "something went wrong in edit";
-                    return error3;
+                    return await PostPut(incoming);
                 }
-
-                Outgoing error2 = new Outgoing();
-                error2.responseType = "something went wrong in request check";
-                return error2;
+                else if (incoming.search.request.type == "remove")
+                {
+                    return await PostDelete(incoming);
+                }
+                else
+                {
+                    return await PostGet(incoming);
+                }
             }
-            //Outgoing error = new Outgoing();
-            //error.Responsetype = "something went wrong in role test";
-            //return error;           
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id}")]       
+        public void Put(int id, [FromBody] string value)        //not used
         {
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(int id)                              //not used
         {
         }
 
@@ -138,15 +126,42 @@ namespace SearchHelperBot.Controllers
                     outgoing.badWords = _repo.BadWords.FindAll().ToList();
                     break;
                 case "instructors":
+                    outgoing.instructors = _repo.Instructors.FindAll().ToList();
                     break;
                 case "languages":
                     outgoing.languages = _repo.Languages.FindAll().ToList();
                     break;
-                case "nearconceptideas":
-                    outgoing.nearConceptIdeas = _repo.NearConceptIdeas.FindAll().ToList();
+                case "nearconceptideas":  // returns NearConceptIdeas in NearConcept form.
+                    {
+                        List<NearConcept> nearConcepts = new List<NearConcept>();
+                        List<NearConceptIdea> nearConceptIdeas = _repo.NearConceptIdeas.FindAll().ToList();
+                        foreach (var idea in nearConceptIdeas)
+                        {
+                            NearConcept nearConcept = new NearConcept();
+                            nearConcept.Phrase = null;
+                            nearConcept.ProperForm = idea.ProperForm;
+                            nearConcept.Day = idea.Day;
+                            nearConcepts.Add(nearConcept);
+                        }
+                        outgoing.nearConcepts = nearConcepts;
+                    }
                     break;
-                case "nearconceptphrases":
-                    outgoing.nearConceptPhrases = _repo.NearConceptPhrases.FindAll().ToList();
+                case "nearconcepts":
+                case "nearconceptPhrases":  // NearConceptPhrases are returned with their NearConceptIdea.
+                    {
+                        List<NearConcept> nearConcepts = new List<NearConcept>();
+                        var nearConceptPhrases = _repo.NearConceptPhrases.FindAll().ToList();
+                        foreach (var phrase in nearConceptPhrases)
+                        {
+                            NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.NearConceptIdeaId == phrase.ConceptId).SingleOrDefault();
+                            NearConcept nearConcept = new NearConcept();
+                            nearConcept.Phrase = phrase.Phrase;
+                            nearConcept.ProperForm = nearConceptIdea.ProperForm;
+                            nearConcept.Day = nearConceptIdea.Day;
+                            nearConcepts.Add(nearConcept);
+                        }
+                        outgoing.nearConcepts = nearConcepts;
+                    }
                     break;
                 case "platforms":
                     outgoing.platforms = _repo.Platforms.FindAll().ToList();
@@ -172,65 +187,314 @@ namespace SearchHelperBot.Controllers
 
         private async Task<Outgoing> PostAdd(Incoming incoming)
         {
-            Outgoing outgoing = new Outgoing();
-
-            outgoing.responseType = incoming.search.request.type;
-
             switch (incoming.search.add.type)
             {
                 case "activeprojects":
-                    outgoing.activeProjects = _repo.ActiveProjects.FindAll().ToList();
+                    ActiveProject activeProject = new ActiveProject();
+                    activeProject.ProjectType = incoming.search.add.name;
+                    activeProject.Day = incoming.search.add.day;
+                    _repo.ActiveProjects.Create(activeProject);
                     break;
                 case "badphrases":
                     BadPhrase badPhrase = new BadPhrase();
                     badPhrase.Phrase = incoming.search.add.name;
                     _repo.BadPhrases.Create(badPhrase);
-                    incoming.search.request.type = incoming.search.add.type;
-                    return await PostGet(incoming);
                     break;
                 case "badwords":
                     BadWord badWord = new BadWord();
                     badWord.Word = incoming.search.add.name;
                     _repo.BadWords.Create(badWord);
-                    incoming.search.request.type = incoming.search.add.type;
-                    return await PostGet(incoming);
                     break;
                 case "instructors":
+                    Instructor instructor = new Instructor();
+                    instructor.UserName = incoming.search.add.name;
+                    _repo.Instructors.Create(instructor);
                     break;
                 case "languages":
-                    outgoing.languages = _repo.Languages.FindAll().ToList();
+                    Language language = new Language();
+                    language.LanguageName = incoming.search.add.name;
+                    _repo.Languages.Create(language);
                     break;
-                case "nearconceptideas":
-                    outgoing.nearConceptIdeas = _repo.NearConceptIdeas.FindAll().ToList();
-                    break;
-                case "nearconceptphrases":
-                    NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(c => c.ProperForm == incoming.search.add.matchTo).SingleOrDefault();//until I am more sure how complex the modals will let things become, shy away from the ids for finding things
-                    NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
-                    if (nearConceptIdea == null)//not sure how this repo system will return. if it's empty we need to populate its values and add it to the database, then pull it again to get the key to pair the foreign key. 
+                case "nearconceptIdeas":        // NearConceptIdeas can be added by themselves.
                     {
-                        nearConceptPhrase.Phrase = incoming.search.add.name;
-                        nearConceptIdea.ProperForm = incoming.search.add.matchTo;//properform is the working string in nearconceptidea.  matchto will have the desired matched search.  I did a terrible job naming these things, sorry. Change them if you like but the keys have to match the json so I will need the exact changes. 
+                        NearConceptIdea nearConceptIdea = new NearConceptIdea();
+                        nearConceptIdea.ProperForm = incoming.search.add.name;
+                        nearConceptIdea.Day = incoming.search.add.day;
+                        _repo.NearConceptIdeas.Create(nearConceptIdea);
+                        break;
                     }
-                    break;
+                case "nearconcepts":
+                case "nearconceptphrases":      // NearConceptPhrases must be added with a NearConceptIdea.
+                    {
+                        NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
+                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+                        if (nearConceptIdea == null)    // add new nearConceptIdea;
+                        {
+                            nearConceptIdea = new NearConceptIdea();
+                            nearConceptIdea.ProperForm = incoming.search.add.matchTo;
+                            nearConceptIdea.Day = incoming.search.add.day;
+                            _repo.NearConceptIdeas.Create(nearConceptIdea);
+                            _repo.Save();
+                            // reload it to get the id.
+                            nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+                        }
+                        nearConceptPhrase.Phrase = incoming.search.add.name;
+                        nearConceptPhrase.ConceptId = nearConceptIdea.NearConceptIdeaId;
+                        _repo.NearConceptPhrases.Create(nearConceptPhrase);
+                        break;
+                    }
                 case "platforms":
-                    outgoing.platforms = _repo.Platforms.FindAll().ToList();
+                    Platform platform = new Platform();
+                    platform.PlatformName = incoming.search.add.name;
+                    _repo.Platforms.Create(platform);
                     break;
                 case "preferredlanguages":
-                    outgoing.preferredLanguages = _repo.PreferredLanguages.FindAll().ToList();
+                    PreferredLanguage preferredLanguage = new PreferredLanguage();
+                    preferredLanguage.LanguageName = incoming.search.add.name;
+                    preferredLanguage.Day = incoming.search.add.day;
+                    _repo.PreferredLanguages.Create(preferredLanguage);
                     break;
                 case "preferredsearches":
-                    outgoing.preferredSearches = _repo.PreferredSearches.FindAll().ToList();
+                    PreferredSearch preferredSearch = new PreferredSearch();
+                    preferredSearch.SearchName = incoming.search.add.name;
+                    _repo.PreferredSearches.Create(preferredSearch);
                     break;
                 case "rawsearches":
-                    outgoing.rawSearches = _repo.RawSearches.FindAll().ToList();
+                    RawSearch rawSearch = new RawSearch();
+                    rawSearch.StudentName = incoming.search.username;
+                    rawSearch.Search = incoming.search.add.name;
+                    _repo.RawSearches.Create(rawSearch);
                     break;
                 case "settings":
-                    outgoing.settings = _repo.Settings.FindAll().ToList();
+                    Setting setting = new Setting();
+                    setting.SettingName = incoming.search.add.name;
+                    setting.Set = incoming.search.setting.set;
+                    _repo.Settings.Create(setting);
                     break;
                 default:
-                    outgoing.responseType = "something went wrong in add";
-                    break;
+                    return await PostError("something went wrong in add");
             }
+            _repo.Save();
+            incoming.search.request.type = incoming.search.add.type;
+            return await PostGet(incoming);
+        }
+
+        private async Task<Outgoing> PostPut(Incoming incoming)
+        {
+            switch (incoming.search.edit.type)
+            {
+                case "activeprojects":
+                    ActiveProject activeProject = _repo.ActiveProjects.FindByCondition(p => p.ActiveProjectId == incoming.search.edit.id).SingleOrDefault();
+                    if (activeProject == null)
+                    {
+                        return await PostError("PostEdit(): activeProject id does not exist");
+                    }
+                    activeProject.ProjectType = incoming.search.edit.newname;
+                    activeProject.Day = incoming.search.edit.day;
+                    _repo.ActiveProjects.Update(activeProject);
+                    break;
+                case "badphrases":
+                    BadPhrase badPhrase = _repo.BadPhrases.FindByCondition(p => p.BadPhraseId == incoming.search.edit.id).SingleOrDefault();
+                    if (badPhrase == null)
+                    {
+                        return await PostError("PostEdit(): badPhrase id does not exist");
+                    }
+                    badPhrase.Phrase = incoming.search.edit.newname;
+                    _repo.BadPhrases.Update(badPhrase);
+                    break;
+                case "badwords":
+                    BadWord badWord = _repo.BadWords.FindByCondition(w => w.BadWordId == incoming.search.edit.id).SingleOrDefault();
+                    if (badWord == null)
+                    {
+                        return await PostError("PostEdit(): badWord id does not exist");
+                    }
+                    badWord.Word = incoming.search.edit.newname;
+                    _repo.BadWords.Update(badWord);
+                    break;
+                case "instructors":
+                    Instructor instructor = _repo.Instructors.FindByCondition(i => i.InstructorId == incoming.search.edit.id).SingleOrDefault();
+                    if (instructor == null)
+                    {
+                        return await PostError("PostEdit(): instructor id does not exist");
+                    }
+                    instructor.UserName = incoming.search.edit.newname;
+                    _repo.Instructors.Update(instructor);
+                    break;
+                case "languages":
+                    Language language = _repo.Languages.FindByCondition(l => l.LanguageId == incoming.search.edit.id).SingleOrDefault();
+                    if (language == null)
+                    {
+                        return await PostError("PostEdit(): language id does not exist");
+                    }
+                    language.LanguageName = incoming.search.edit.newname;
+                    _repo.Languages.Update(language);
+                    break;
+                case "nearconceptIdeas":        // NearConceptIdeas can be edited by themselves.
+                    {
+                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.NearConceptIdeaId == incoming.search.edit.id).SingleOrDefault();
+                        if (nearConceptIdea == null)
+                        {
+                            return await PostError("PostEdit(): nearConceptIdea id does not exist");
+                        }
+                        nearConceptIdea.ProperForm = incoming.search.edit.newname;
+                        nearConceptIdea.Day = incoming.search.edit.day;
+                        _repo.NearConceptIdeas.Update(nearConceptIdea);
+                        break;
+                    }
+                case "nearconcepts":            // TODO:  Here on down.
+                case "nearconceptphrases":      // NearConceptPhrases must be added with a NearConceptIdea.
+                    {
+                        NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
+                        NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+                        if (nearConceptIdea == null)    // add new nearConceptIdea;
+                        {
+                            nearConceptIdea = new NearConceptIdea();
+                            nearConceptIdea.ProperForm = incoming.search.add.matchTo;
+                            nearConceptIdea.Day = incoming.search.add.day;
+                            _repo.NearConceptIdeas.Create(nearConceptIdea);
+                            _repo.Save();
+                            // reload it to get the id.
+                            nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+                        }
+                        nearConceptPhrase.Phrase = incoming.search.add.name;
+                        nearConceptPhrase.ConceptId = nearConceptIdea.NearConceptIdeaId;
+                        _repo.NearConceptPhrases.Create(nearConceptPhrase);
+                        break;
+                    }
+                case "platforms":
+                    Platform platform = new Platform();
+                    platform.PlatformName = incoming.search.add.name;
+                    _repo.Platforms.Create(platform);
+                    break;
+                case "preferredlanguages":
+                    PreferredLanguage preferredLanguage = new PreferredLanguage();
+                    preferredLanguage.LanguageName = incoming.search.add.name;
+                    preferredLanguage.Day = incoming.search.add.day;
+                    _repo.PreferredLanguages.Create(preferredLanguage);
+                    break;
+                case "preferredsearches":
+                    PreferredSearch preferredSearch = new PreferredSearch();
+                    preferredSearch.SearchName = incoming.search.add.name;
+                    _repo.PreferredSearches.Create(preferredSearch);
+                    break;
+                case "rawsearches":
+                    RawSearch rawSearch = new RawSearch();
+                    rawSearch.StudentName = incoming.search.username;
+                    rawSearch.Search = incoming.search.add.name;
+                    _repo.RawSearches.Create(rawSearch);
+                    break;
+                case "settings":
+                    Setting setting = new Setting();
+                    setting.SettingName = incoming.search.add.name;
+                    setting.Set = incoming.search.setting.set;
+                    _repo.Settings.Create(setting);
+                    break;
+                default:
+                    return await PostError("something went wrong in edit");
+            }
+            _repo.Save();
+            incoming.search.request.type = incoming.search.edit.type;
+            return await PostGet(incoming);
+        }
+
+        private async Task<Outgoing> PostDelete(Incoming incoming)
+        {
+            //switch (incoming.search.add.type)
+            //{
+            //    case "activeprojects":
+            //        ActiveProject activeProject = new ActiveProject();
+            //        activeProject.ProjectType = incoming.search.add.name;
+            //        activeProject.Day = incoming.search.add.day;
+            //        _repo.ActiveProjects.Create(activeProject);
+            //        break;
+            //    case "badphrases":
+            //        BadPhrase badPhrase = new BadPhrase();
+            //        badPhrase.Phrase = incoming.search.add.name;
+            //        _repo.BadPhrases.Create(badPhrase);
+            //        break;
+            //    case "badwords":
+            //        BadWord badWord = new BadWord();
+            //        badWord.Word = incoming.search.add.name;
+            //        _repo.BadWords.Create(badWord);
+            //        break;
+            //    case "instructors":
+            //        Instructor instructor = new Instructor();
+            //        instructor.UserName = incoming.search.add.name;
+            //        _repo.Instructors.Create(instructor);
+            //        break;
+            //    case "languages":
+            //        Language language = new Language();
+            //        language.LanguageName = incoming.search.add.name;
+            //        _repo.Languages.Create(language);
+            //        break;
+            //    case "nearconceptIdeas":        // NearConceptIdeas can be added by themselves.
+            //        {
+            //            NearConceptIdea nearConceptIdea = new NearConceptIdea();
+            //            nearConceptIdea.ProperForm = incoming.search.add.name;
+            //            nearConceptIdea.Day = incoming.search.add.day;
+            //            _repo.NearConceptIdeas.Create(nearConceptIdea);
+            //            break;
+            //        }
+            //    case "nearconcepts":
+            //    case "nearconceptphrases":      // NearConceptPhrases must be added with a NearConceptIdea.
+            //        {
+            //            NearConceptPhrase nearConceptPhrase = new NearConceptPhrase();
+            //            NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+            //            if (nearConceptIdea == null)    // add new nearConceptIdea;
+            //            {
+            //                nearConceptIdea = new NearConceptIdea();
+            //                nearConceptIdea.ProperForm = incoming.search.add.matchTo;
+            //                nearConceptIdea.Day = incoming.search.add.day;
+            //                _repo.NearConceptIdeas.Create(nearConceptIdea);
+            //                _repo.Save();
+            //                // reload it to get the id.
+            //                nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.ProperForm == incoming.search.add.matchTo).SingleOrDefault();
+            //            }
+            //            nearConceptPhrase.Phrase = incoming.search.add.name;
+            //            nearConceptPhrase.ConceptId = nearConceptIdea.NearConceptIdeaId;
+            //            _repo.NearConceptPhrases.Create(nearConceptPhrase);
+            //            break;
+            //        }
+            //    case "platforms":
+            //        Platform platform = new Platform();
+            //        platform.PlatformName = incoming.search.add.name;
+            //        _repo.Platforms.Create(platform);
+            //        break;
+            //    case "preferredlanguages":
+            //        PreferredLanguage preferredLanguage = new PreferredLanguage();
+            //        preferredLanguage.LanguageName = incoming.search.add.name;
+            //        preferredLanguage.Day = incoming.search.add.day;
+            //        _repo.PreferredLanguages.Create(preferredLanguage);
+            //        break;
+            //    case "preferredsearches":
+            //        PreferredSearch preferredSearch = new PreferredSearch();
+            //        preferredSearch.SearchName = incoming.search.add.name;
+            //        _repo.PreferredSearches.Create(preferredSearch);
+            //        break;
+            //    case "rawsearches":
+            //        RawSearch rawSearch = new RawSearch();
+            //        rawSearch.StudentName = incoming.search.username;
+            //        rawSearch.Search = incoming.search.add.name;
+            //        _repo.RawSearches.Create(rawSearch);
+            //        break;
+            //    case "settings":
+            //        Setting setting = new Setting();
+            //        setting.SettingName = incoming.search.add.name;
+            //        setting.Set = incoming.search.setting.set;
+            //        _repo.Settings.Create(setting);
+            //        break;
+            //    default:
+            //        return await PostError("something went wrong in add");
+            //}
+            //_repo.Save();
+            //incoming.search.request.type = incoming.search.add.type;
+            return await PostGet(incoming);
+        }
+
+        private async Task<Outgoing> PostError(string error)
+        {
+            Outgoing outgoing = new Outgoing();
+            outgoing.responseType = error;
             return outgoing;
         }
     }
