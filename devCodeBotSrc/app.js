@@ -24,13 +24,25 @@ const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
 const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to see how I handle input data from the modal and posting it back to the instructor chat. You will need to create your own file similar to this one to post the payload back to your API
 const tonyTestStart = require('./BlockKits/tonyTestStart'); // TONY: This pulls in the function from the specified file to be used below
-//const tonyTestModal = require('./BlockKits.tonyTestModal'); // TONY: This file contains the actual modal block
+const selectOperationModal = require('./Crud-Y_Modals/selectOperationModal'); // TONY: This file contains the actual modal block
+const basicSearchReturn = require('./Crud-y_Modals/BasicSearchReturn')
+
+const axios = require("axios");
+const myaxios = require('./Crud-y_Modals/axiosmethods');
+const jsonbuilder = require('./Crud-y_Modals/jsonbuilder');
+const { Console } = require('console');
+
 
 // configure express server for development
 app.use('/slack/actions', slackInteractions.expressMiddleware());
 app.use('/slack/events', slackEvents.expressMiddleware());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+
+//testing junk by tony 
+
+
 
 // on user sends a direct message
 slackEvents.on('message', (message, body) => {
@@ -45,19 +57,28 @@ slackEvents.on('message', (message, body) => {
         if (message.text == 'question card') {
             var block = qcStart.questionCardStart(message);
             var parsedBlock = JSON.parse(block);
-            const response = await web.chat.postMessage(parsedBlock);
+                const response = await web.chat.postMessage(parsedBlock);
         }
         // TONY: typing 'tony test' will run this and return the contents of the tonyTestStart file
-        if (message.text == 'tony test') {
-            var block = tonyTestStart.tonyTestStart(message);
-            var parsedBlock = JSON.parse(block);
-            const response = await web.chat.postMessage(parsedBlock); // postMessage(parsedBlock) accepts the entire JSON payload from tonyTestStart and pushes it to the chat window in Slack
+        if (message.text == 'tony test') {//I'm pretty sure there is a contains method
+            //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
+            //var thisresponse = myaxios.AxiosPostRequest()
+
+            //send the default case to meeeeeeeeeeee.
+            var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
+            var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
+            var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
+            const response = await web.chat.postMessage(parsedBlock);
+
+             // postMessage(parsedBlock) accepts the entire JSON payload from tonyTestStart and pushes it to the chat window in Slack
         }
       } catch (error) {
         console.log(error.data);
       }
     })();
 });
+
+
 
 // interactivity functions
 slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
@@ -74,7 +95,15 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
 });
 
 // TONY: interactivity function: invoked when the button is clicked from the first message sent from tonyTestStart()
-slackInteractions.action({ "action-id": "tonyTestModalLaunch" }, async (payload) => {
+function getpost(){
+
+    var input = jsonbuilder.buildmyjson()
+    var output = myaxios.AxiosPostRequest(input)
+}
+
+
+
+slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) => {
     try {
         var openTonyModal = JSON.parse(tonyTestModal.tonyTestModal(/*Your parameters to send in from the payload */)); // This prepares the modal in JSON format
         await web.views.open( openTonyModal ); // This actually opens the modal in the UI
