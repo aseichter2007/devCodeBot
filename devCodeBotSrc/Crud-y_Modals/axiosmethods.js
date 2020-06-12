@@ -1,6 +1,5 @@
-function AxiosPostRequest(output){
+function AxiosPostRequest(input){
     var output;
-    const axios = require("axios");
  axios.axios.post("https://localhost:44317/api/values/" , output).then((response) => {
       output= response;
       console.log(response);
