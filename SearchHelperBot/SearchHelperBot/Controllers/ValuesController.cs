@@ -49,47 +49,41 @@ namespace SearchHelperBot.Controllers
         [HttpPost]
         public async Task<string> Post([FromBody] Incoming incoming)//changed output to strings
         {
+            Outgoing outgoing;
+
             if (incoming.search.role == "student")    // basic search
             {
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
-                Outgoing searchResult = new Outgoing();
+                outgoing = new Outgoing();
 
                 // Searchhelper requires the split characher to be passed in so that it can work with both plaintest strings from post 
                 // and url formatted string which cannot contain spaces.
                 char split = ' ';
-                searchResult.responseType = "search";
-                searchResult.searches = await ProcessSearch(day, search, split);
-                string result = JsonConvert.SerializeObject(searchResult);
-                return result;
+                outgoing.responseType = "search";
+                outgoing.searches = await ProcessSearch(day, search, split);
             }
             else      //if not type student, it must be an instructor - manage database
             {
                 if (incoming.search.request.type == "add")
                 {
-                    Outgoing addResult = await PostAdd(incoming);
-                    string result = JsonConvert.SerializeObject(addResult);
-                    return result;
+                    outgoing = await PostAdd(incoming);
                 }
                 else if (incoming.search.request.type == "edit")
                 {
-                    Outgoing editResult = await PostPut(incoming);
-                    string result = JsonConvert.SerializeObject(editResult);
-                    return result;
+                    outgoing = await PostPut(incoming);
                 }
                 else if (incoming.search.request.type == "remove")
                 {
-                    Outgoing removeResult = await PostDelete(incoming);
-                    string result = JsonConvert.SerializeObject(removeResult);
-                    return result;
+                    outgoing = await PostDelete(incoming);
                 }
                 else
                 {
-                    Outgoing getResult = await PostGet(incoming);
-                    string result = JsonConvert.SerializeObject(getResult);
-                    return result;
+                    outgoing = await PostGet(incoming);
                 }
             }
+            string result = JsonConvert.SerializeObject(outgoing);
+            return result;
         }
 
         // PUT api/<ValuesController>/5
