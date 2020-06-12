@@ -147,7 +147,7 @@ namespace SearchHelperBot.Controllers
                     }
                     break;
                 case "nearconcepts":
-                case "nearconceptPhrases":  // NearConceptPhrases are returned with their NearConceptIdea.
+                case "nearconceptphrases":  // NearConceptPhrases are returned with their NearConceptIdea.
                     {
                         List<NearConcept> nearConcepts = new List<NearConcept>();
                         var nearConceptPhrases = _repo.NearConceptPhrases.FindAll().ToList();
@@ -215,7 +215,7 @@ namespace SearchHelperBot.Controllers
                     language.LanguageName = incoming.search.add.name;
                     _repo.Languages.Create(language);
                     break;
-                case "nearconceptIdeas":        // NearConceptIdeas can be added by themselves.
+                case "nearconceptideas":        // NearConceptIdeas can be added by themselves.
                     {
                         NearConceptIdea nearConceptIdea = new NearConceptIdea();
                         nearConceptIdea.ProperForm = incoming.search.add.name;
@@ -329,7 +329,7 @@ namespace SearchHelperBot.Controllers
                     language.LanguageName = incoming.search.edit.newname;
                     _repo.Languages.Update(language);
                     break;
-                case "nearconceptIdeas":        // NearConceptIdeas can be edited by themselves.
+                case "nearconceptideas":        // NearConceptIdeas can be edited by themselves.
                     {
                         NearConceptIdea nearConceptIdea = _repo.NearConceptIdeas.FindByCondition(i => i.NearConceptIdeaId == incoming.search.edit.id).SingleOrDefault();
                         if (nearConceptIdea == null)
@@ -467,7 +467,7 @@ namespace SearchHelperBot.Controllers
                     }
                     _repo.Languages.Delete(language);
                     break;
-                case "nearconceptIdeas":        // NearConceptIdeas cannot be deleted.
+                case "nearconceptideas":        // NearConceptIdeas cannot be deleted.
                     break;
                 case "nearconcepts":
                 case "nearconceptphrases":      // NearConceptPhrases can be deleted.  The linked NearConceptIdea is not deleted.
