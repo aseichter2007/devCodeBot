@@ -141,7 +141,7 @@ slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
     } catch (e) {
         console.log(e);
     }
-} )
+});
 
 //tony modal calls
 slackInteractions.action({"action-id": "manageactionselected" }, async (payload) =>{
@@ -155,7 +155,7 @@ slackInteractions.action({"action-id": "manageactionselected" }, async (payload)
     } catch (e) {
         console.log(e);
     }
-} )
+});
 slackInteractions.viewSubmission('manageactionselect', async (payload) => {
 
     var trigger = payload.trigger_id;
@@ -170,7 +170,7 @@ slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     } catch (e) {
         console.log(e);
     }
-})
+});
 
 //I dont think I am using this currently but better safe than sorry
 slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) => {
@@ -184,7 +184,7 @@ slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) 
     return {
         text: 'Processing...'
     }
-})
+});
 
 // new funciton
 
