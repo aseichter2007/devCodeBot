@@ -88,6 +88,14 @@ slackEvents.on('message', (message, body) => {
                     let defaultResponse = await web.chat.postMessage(parsedBlock);
                     break;
                 default:
+                    //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
+                    //var thisresponse = myaxios.AxiosPostRequest()
+                    //send the default case to meeeeeeeeeeee.
+                    var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
+                    var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
+                    var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
+                    const response = await web.chat.postMessage(parsedBlock);
+                    // postMessage(parsedBlock) accepts the entire JSON payload from tonyTestStart and pushes it to the chat window in Slack
                     break;
             }
         }
