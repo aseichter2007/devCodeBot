@@ -130,9 +130,6 @@ namespace SearchHelperBot.Controllers
                 case "badwords":
                     outgoing.badWords = _repo.BadWords.FindAll().ToList();
                     break;
-                case "instructors":
-                    outgoing.instructors = _repo.Instructors.FindAll().ToList();
-                    break;
                 case "languages":
                     outgoing.languages = _repo.Languages.FindAll().ToList();
                     break;
@@ -209,11 +206,6 @@ namespace SearchHelperBot.Controllers
                     BadWord badWord = new BadWord();
                     badWord.Word = incoming.search.add.name;
                     _repo.BadWords.Create(badWord);
-                    break;
-                case "instructors":
-                    Instructor instructor = new Instructor();
-                    instructor.UserName = incoming.search.add.name;
-                    _repo.Instructors.Create(instructor);
                     break;
                 case "languages":
                     Language language = new Language();
@@ -315,15 +307,6 @@ namespace SearchHelperBot.Controllers
                     }
                     badWord.Word = incoming.search.edit.newname;
                     _repo.BadWords.Update(badWord);
-                    break;
-                case "instructors":
-                    Instructor instructor = _repo.Instructors.FindByCondition(i => i.InstructorId == incoming.search.edit.id).SingleOrDefault();
-                    if (instructor == null)
-                    {
-                        return await PostError("PostEdit(): instructor id does not exist");
-                    }
-                    instructor.UserName = incoming.search.edit.newname;
-                    _repo.Instructors.Update(instructor);
                     break;
                 case "languages":
                     Language language = _repo.Languages.FindByCondition(l => l.LanguageId == incoming.search.edit.id).SingleOrDefault();
@@ -455,14 +438,6 @@ namespace SearchHelperBot.Controllers
                         return await PostError("PostRemove(): badWord id does not exist");
                     }
                     _repo.BadWords.Delete(badWord);
-                    break;
-                case "instructors":
-                    Instructor instructor = _repo.Instructors.FindByCondition(i => i.InstructorId == incoming.search.remove.id).SingleOrDefault();
-                    if (instructor == null)
-                    {
-                        return await PostError("PostRemove(): instructor id does not exist");
-                    }
-                    _repo.Instructors.Delete(instructor);
                     break;
                 case "languages":
                     Language language = _repo.Languages.FindByCondition(l => l.LanguageId == incoming.search.remove.id).SingleOrDefault();

@@ -12,7 +12,6 @@ namespace Repository.Data
         public DbSet<ActiveProject> ActiveProjects { get; set; }
         public DbSet<BadPhrase> BadPhrases { get; set; }
         public DbSet<BadWord> BadWords { get; set; }
-        public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<NearConceptIdea> NearConceptIdeas { get; set; }
         public DbSet<NearConceptPhrase> NearConceptPhrases { get; set; }
@@ -51,15 +50,6 @@ namespace Repository.Data
                     new BadWord { BadWordId = 4, Word = "like" },     
                     new BadWord { BadWordId = 5, Word = "maybe" }
                 );
-            builder.Entity<Instructor>()
-                .HasData(
-                    new Instructor { InstructorId = 1, UserName = "Brett Johnson" },
-                    new Instructor { InstructorId = 2, UserName = "Charles King" },
-                    new Instructor { InstructorId = 3, UserName = "David Lagrange" },
-                    new Instructor { InstructorId = 4, UserName = "Michael Heinisch" },
-                    new Instructor { InstructorId = 5, UserName = "Michael Terrill" },
-                    new Instructor { InstructorId = 6, UserName = "Nevin Seibel" }
-                );
             builder.Entity<Language>()
                 .HasData(
                     new Language { LanguageId = 1, LanguageName = "c#" },
@@ -96,6 +86,10 @@ namespace Repository.Data
                     new PreferredSearch { PreferredSearchId = 1, SearchName = "docs.microsoft.com" },
                     new PreferredSearch { PreferredSearchId = 2, SearchName = "stackoverflow" },
                     new PreferredSearch { PreferredSearchId = 3, SearchName = "w3schools" }
+                );
+            builder.Entity<Setting>()
+                .HasData(
+                    new Setting { SettingId = 1, SettingName = "logging", Set = false }
                 );
         }
     }

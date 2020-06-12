@@ -9,7 +9,6 @@ namespace Repository.Contracts
         IActiveProjectRepository ActiveProjects { get; }
         IBadPhraseRepository BadPhrases { get; }
         IBadWordRepository BadWords { get; }
-        IInstructorRepository Instructors { get; }
         ILanguageRepository Languages { get; }
         INearConceptIdeaRepository NearConceptIdeas { get; }
         INearConceptPhraseRepository NearConceptPhrases { get; }

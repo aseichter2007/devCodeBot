@@ -118,53 +118,6 @@ namespace Repository.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Repository.Models.Instructor", b =>
-                {
-                    b.Property<int>("InstructorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("InstructorId");
-
-                    b.ToTable("Instructors");
-
-                    b.HasData(
-                        new
-                        {
-                            InstructorId = 1,
-                            UserName = "Brett Johnson"
-                        },
-                        new
-                        {
-                            InstructorId = 2,
-                            UserName = "Charles King"
-                        },
-                        new
-                        {
-                            InstructorId = 3,
-                            UserName = "David Lagrange"
-                        },
-                        new
-                        {
-                            InstructorId = 4,
-                            UserName = "Michael Heinisch"
-                        },
-                        new
-                        {
-                            InstructorId = 5,
-                            UserName = "Michael Terrill"
-                        },
-                        new
-                        {
-                            InstructorId = 6,
-                            UserName = "Nevin Seibel"
-                        });
-                });
-
             modelBuilder.Entity("Repository.Models.Language", b =>
                 {
                     b.Property<int>("LanguageId")
@@ -414,6 +367,14 @@ namespace Repository.Migrations
                     b.HasKey("SettingId");
 
                     b.ToTable("Settings");
+
+                    b.HasData(
+                        new
+                        {
+                            SettingId = 1,
+                            Set = false,
+                            SettingName = "logging"
+                        });
                 });
 #pragma warning restore 612, 618
         }

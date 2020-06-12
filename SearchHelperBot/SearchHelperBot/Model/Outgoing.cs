@@ -15,7 +15,6 @@ namespace SearchHelperBot.Model
         public List<ActiveProject> activeProjects;
         public List<BadPhrase> badPhrases;
         public List<BadWord> badWords;
-        public List<Instructor> instructors;
         public List<Language> languages;
         public List<NearConcept> nearConcepts;
         public List<Platform> platforms;

@@ -47,19 +47,6 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Instructors",
-                columns: table => new
-                {
-                    InstructorId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Instructors", x => x.InstructorId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Languages",
                 columns: table => new
                 {
@@ -196,26 +183,13 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Instructors",
-                columns: new[] { "InstructorId", "UserName" },
-                values: new object[,]
-                {
-                    { 1, "Brett Johnson" },
-                    { 2, "Charles King" },
-                    { 3, "David Lagrange" },
-                    { 4, "Michael Heinisch" },
-                    { 5, "Michael Terrill" },
-                    { 6, "Nevin Seibel" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Languages",
                 columns: new[] { "LanguageId", "LanguageName" },
                 values: new object[,]
                 {
-                    { 3, "html" },
+                    { 1, "c#" },
                     { 2, "javascript" },
-                    { 1, "c#" }
+                    { 3, "html" }
                 });
 
             migrationBuilder.InsertData(
@@ -223,9 +197,9 @@ namespace Repository.Migrations
                 columns: new[] { "NearConceptIdeaId", "Day", "ProperForm" },
                 values: new object[,]
                 {
-                    { 1, 0, "loop over each value" },
                     { 2, 0, "find index of" },
-                    { 3, 0, "mvc view" }
+                    { 3, 0, "mvc view" },
+                    { 1, 0, "loop over each value" }
                 });
 
             migrationBuilder.InsertData(
@@ -233,11 +207,11 @@ namespace Repository.Migrations
                 columns: new[] { "NearConceptPhraseId", "ConceptId", "Phrase" },
                 values: new object[,]
                 {
-                    { 4, 2, "find location of" },
-                    { 3, 2, "get individual value" },
-                    { 5, 3, "webpage in mvc" },
                     { 1, 1, "get values in" },
-                    { 2, 1, "search for value" }
+                    { 2, 1, "search for value" },
+                    { 3, 2, "get individual value" },
+                    { 4, 2, "find location of" },
+                    { 5, 3, "webpage in mvc" }
                 });
 
             migrationBuilder.InsertData(
@@ -261,10 +235,15 @@ namespace Repository.Migrations
                 columns: new[] { "PreferredSearchId", "SearchName" },
                 values: new object[,]
                 {
-                    { 2, "stackoverflow" },
+                    { 3, "w3schools" },
                     { 1, "docs.microsoft.com" },
-                    { 3, "w3schools" }
+                    { 2, "stackoverflow" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Settings",
+                columns: new[] { "SettingId", "Set", "SettingName" },
+                values: new object[] { 1, false, "logging" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -277,9 +256,6 @@ namespace Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "BadWords");
-
-            migrationBuilder.DropTable(
-                name: "Instructors");
 
             migrationBuilder.DropTable(
                 name: "Languages");

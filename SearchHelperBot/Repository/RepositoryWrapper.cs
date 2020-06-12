@@ -12,7 +12,6 @@ namespace Repository
         private IActiveProjectRepository _activeProjects;
         private IBadPhraseRepository _badPhrases;
         private IBadWordRepository _badWords;
-        private IInstructorRepository _instructors;
         private ILanguageRepository _languages;
         private INearConceptIdeaRepository _nearConceptIdeas;
         private INearConceptPhraseRepository _nearConceptPhrases;
@@ -47,15 +46,6 @@ namespace Repository
                 if (_badWords == null)
                     _badWords = new BadWordRepository(_context);
                 return _badWords;
-            }
-        }
-        public IInstructorRepository Instructors
-        {
-            get
-            {
-                if (_instructors == null)
-                    _instructors = new InstructorRepository(_context);
-                return _instructors;
             }
         }
         public ILanguageRepository Languages
