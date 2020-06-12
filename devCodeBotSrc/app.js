@@ -116,19 +116,7 @@ slackEvents.on('message', (message, body) => {
 
 
 
-// interactivity functions
-slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
-    try {
-        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
-        await web.views.open( openModal );
-    } catch (e) {
-        console.log(e);
-    }
 
-    return {
-        text: 'Processing...'
-    }
-});
 
 // TONY: interactivity function:
 slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
@@ -140,6 +128,20 @@ slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
 
     } catch (e) {
         console.log(e);
+    }
+});
+
+// interactivity functions
+slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
+    try {
+        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
+        await web.views.open( openModal );
+    } catch (e) {
+        console.log(e);
+    }
+
+    return {
+        text: 'Processing...'
     }
 });
 

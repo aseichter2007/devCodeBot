@@ -162,7 +162,7 @@ namespace SearchHelperBot
         }
         public string NearConceptParse(string input)
         {
-            string[] working = input.Split(splitchar);
+            string[] working = input.Split(' ');
             foreach (KeyValuePair<string, string> nearConcept in nearConcepts)
             {
 
