@@ -1,4 +1,4 @@
-const questionCard = (trigger) => {
+const questionCard = (trigger, channel) => {
 	var block = 
 	`{
         "trigger_id": "${trigger}",
@@ -56,7 +56,8 @@ const questionCard = (trigger) => {
                     }
                 }
             ],
-            "type": "modal"
+            "type": "modal",
+            "private_metadata": "${channel}"
         }
     }`;
 	return block;

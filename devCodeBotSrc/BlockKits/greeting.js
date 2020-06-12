@@ -17,13 +17,6 @@ const greeting = (message) => {
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\`lookup\`: follow this with a search query and I'll get you some suggested Google search results"
-				}
-			},
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
 					"text": "\`timebox\`: this will set a 30-minute timer to keep you in check while you're troubleshooting"
 				}
 			},
@@ -39,6 +32,16 @@ const greeting = (message) => {
 				"text": {
 					"type": "mrkdwn",
 					"text": "\`cancel timebox\`: use this to cancel a currently active timebox timer"
+				}
+			},
+			{
+				"type": "divider"
+			},
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": "If you want me to help you look something up, just ask me a question!"
 				}
 			}
 		]
