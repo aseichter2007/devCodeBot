@@ -123,27 +123,18 @@ namespace SearchHelperBot.Controllers
             {
                 case "activeprojects":
                     outgoing.activeProjects = _repo.ActiveProjects.FindAll().ToList();
-                    outgoing.responseType = "activeprojects";
                     break;
                 case "badphrases":
                     outgoing.badPhrases = _repo.BadPhrases.FindAll().ToList();
-                    outgoing.responseType = "badphrases";
-
                     break;
                 case "badwords":
                     outgoing.badWords = _repo.BadWords.FindAll().ToList();
-                    outgoing.responseType = "badwords";
-
                     break;
                 case "instructors":
                     outgoing.instructors = _repo.Instructors.FindAll().ToList();
-                    outgoing.responseType = "instructors";
-
                     break;
                 case "languages":
                     outgoing.languages = _repo.Languages.FindAll().ToList();
-                    outgoing.responseType = "languages";
-
                     break;
                 case "nearconceptideas":  // returns NearConceptIdeas in NearConcept form.
                     {
@@ -158,8 +149,6 @@ namespace SearchHelperBot.Controllers
                             nearConcepts.Add(nearConcept);
                         }
                         outgoing.nearConcepts = nearConcepts;
-                        outgoing.responseType = "nearConceptideas";
-
                     }
                     break;
                 case "nearconcepts":
@@ -177,38 +166,25 @@ namespace SearchHelperBot.Controllers
                             nearConcepts.Add(nearConcept);
                         }
                         outgoing.nearConcepts = nearConcepts;
-                        outgoing.responseType = "nearconceptPhrases";
-
                     }
                     break;
                 case "platforms":
                     outgoing.platforms = _repo.Platforms.FindAll().ToList();
-                    outgoing.responseType = "platforms";
-
                     break;
                 case "preferredlanguages":
                     outgoing.preferredLanguages = _repo.PreferredLanguages.FindAll().ToList();
-                    outgoing.responseType = "preferredlanguages";
-
                     break;
                 case "preferredsearches":
                     outgoing.preferredSearches = _repo.PreferredSearches.FindAll().ToList();
-                    outgoing.responseType = "preferredsearches";
-
                     break;
                 case "rawsearches":
                     outgoing.rawSearches = _repo.RawSearches.FindAll().ToList();
-                    outgoing.responseType = "rawsearches";
-
                     break;
                 case "settings":
                     outgoing.settings = _repo.Settings.FindAll().ToList();
-                    outgoing.responseType = "settings";
-
                     break;
                 default:
-                    outgoing.responseType = "something went wrong in get";                    
-
+                    outgoing.responseType = "something went wrong in get";           
                     break;
             }
             return outgoing;
