@@ -1,7 +1,6 @@
 const DbAcess = (message) => {
 	var block = 
 	`{
-        "private_metadata" = "${message.channel}",
         "channel": "${message.channel}",
         "blocks": [
             {
