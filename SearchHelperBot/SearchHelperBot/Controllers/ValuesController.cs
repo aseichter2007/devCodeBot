@@ -55,6 +55,9 @@ namespace SearchHelperBot.Controllers
             {
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
+
+                PostRawSearch(incoming.search.username, $"Day {day}: {search}");
+
                 outgoing = new Outgoing();
 
                 // Searchhelper requires the split characher to be passed in so that it can work with both plaintest strings from post 
@@ -511,6 +514,15 @@ namespace SearchHelperBot.Controllers
             Outgoing outgoing = new Outgoing();
             outgoing.responseType = error;
             return outgoing;
+        }
+
+        private void PostRawSearch(string name, string search)
+        {
+            RawSearch rawSearch = new RawSearch();
+            rawSearch.StudentName = name;
+            rawSearch.Search = search;
+            _repo.RawSearches.Create(rawSearch);
+            _repo.Save();
         }
     }
 }
