@@ -97,8 +97,24 @@ slackEvents.on('message', (message, body) => {
                      const manageresponse = await web.chat.postMessage(parsedBlock)
                     break;
                 default:
-                    //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
-                    //var thisresponse = myaxios.AxiosPostRequest()
+                    var user = message.user;
+                   // var userinfo = await web.users.info(user);   //fowley I would be pretty stoked if you could sort this out. We need it for search logging
+                    
+                //     var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
+                //     var postme = JSON.stringify(myjson);
+                //     var url = 'http://localhost:58685/api/values/';
+                //     var thisresponse = await axios.axios({
+                //         method: 'post',
+                //         url: url,
+                //         data: postme,
+                //     })  
+                //     .then((res) => {
+                //         console.log(res)
+                //     }).catch((error) => {
+                //     console.error(error)
+                // });
+
+
                     //send the default case to meeeeeeeeeeee.
                     var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
                     var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
@@ -118,18 +134,7 @@ slackEvents.on('message', (message, body) => {
 
 
 
-// TONY: interactivity function:
-slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
-    try {
-        //call manage selection modal
-        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
-        var openModal = JSON.parse(block);
-        await web.views.open( openModal );
 
-    } catch (e) {
-        console.log(e);
-    }
-});
 
 // interactivity functions
 slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
@@ -142,6 +147,19 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
 
     return {
         text: 'Processing...'
+    }
+});
+
+// TONY: interactivity function:
+slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
+    try {
+        //call manage selection modal
+        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
+        var openModal = JSON.parse(block);
+        await web.views.open( openModal );
+
+    } catch (e) {
+        console.log(e);
     }
 });
 

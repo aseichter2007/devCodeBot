@@ -129,11 +129,11 @@ namespace SearchHelperBot
             //performs all the methods in order to improve a user question into a better result
             string working = SearchCleaner(input.ToLower());//ceans badwords and badphrases from string
             working = NearConceptParse(working);
+            working = Language(working);//checks and adds preferred language if no lanuage specified
             if (activeProject != "")
             {
                 working = Projects(working);//checks if a project type is defined and adds it if none are declared.
             }
-            working = Language(working);//checks and adds preferred language if no lanuage specified
             return working;
         }
         public string Projects(string input)

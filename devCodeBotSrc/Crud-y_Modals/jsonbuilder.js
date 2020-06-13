@@ -30,7 +30,7 @@ var request = {"search": {
         "id": id,
         "name": name       
     },
-    "isetting":{
+    "setting":{
         "id": id,
         "set": set
     }
