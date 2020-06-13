@@ -13,7 +13,7 @@
         public Add add { get; set; }
         public Edit edit { get; set; }
         public Remove remove { get; set; }
-        public iSetting setting { get; set; }
+        public Isetting isetting { get; set; }
     }
 
     public class Request
@@ -33,7 +33,7 @@
         public int id { get; set; }
         public string name { get; set; }
         public string matchTo { get; set; }     // NearConceptIdea to match to.
-        public string conceptKey { get; set; }
+        public int conceptKey { get; set; }
         public int day { get; set; }
     }
 
@@ -46,7 +46,7 @@
         public string originalname { get; set; }
         public string newname { get; set; }
         public string matchto { get; set; }
-        public string conceptKey { get; set; }
+        public int conceptKey { get; set; }
         public int day { get; set; }
     }
 
@@ -59,7 +59,7 @@
         public string name { get; set; }
     }
 
-    public class iSetting
+    public class Isetting
     {
         public int id { get; set; }
         public bool set { get; set; }

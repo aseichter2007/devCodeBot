@@ -268,7 +268,7 @@ namespace SearchHelperBot.Controllers
                 case "settings":
                     Setting setting = new Setting();
                     setting.SettingName = incoming.search.add.name;
-                    setting.Set = incoming.search.setting.set;
+                    setting.Set = incoming.search.isetting.set;
                     _repo.Settings.Create(setting);
                     break;
                 default:
@@ -403,7 +403,7 @@ namespace SearchHelperBot.Controllers
                         return await PostError("PostEdit(): setting id does not exist");
                     }
                     setting.SettingName = incoming.search.edit.newname;
-                    setting.Set = incoming.search.setting.set;
+                    setting.Set = incoming.search.isetting.set;
                     _repo.Settings.Update(setting);
                     break;
                 default:

@@ -97,6 +97,14 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                                 "emoji": true
                             },
                             "value": "languages"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "*Toggle logging.",
+                                "emoji": true
+                            },
+                            "value": "logging"
                         }
                     ]
                 },

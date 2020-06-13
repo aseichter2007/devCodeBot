@@ -97,13 +97,31 @@ slackEvents.on('message', (message, body) => {
                      const manageresponse = await web.chat.postMessage(parsedBlock)
                     break;
                 default:
-                    //var myjson = jsonbuilder.buildmyjson("student", "name", "search", "help this is killing me", message.text, 0, "name", "name", "name", 0, false, 0)
-                    //var thisresponse = myaxios.AxiosPostRequest()
-                    //send the default case to meeeeeeeeeeee.
-                    var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
-                    var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
-                    var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
-                    const response = await web.chat.postMessage(parsedBlock);
+                    var user = message.user;
+                   // var userinfo = await web.users.info(user);   //fowley I would be pretty stoked if you could sort this out. We need it for search logging
+                    
+                   
+                   //uses proper endpoint to allow logging and user info to pass in. 
+                    var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
+                    var url = "http://localhost:58685/api/values/";
+                 
+                    axios.post(url,myjson)
+                    .then((res) => {
+                        var parsedBlock = basicSearchReturn.BasicSearch(res, message);
+                        web.chat.postMessage(parsedBlock);
+                    }).catch((error) => {
+                    console.error(error)
+                    });
+                    //axios is hot garbage. hours wasted here 9.5. /still dont know what I was missing the hundred ways I tried but this worked.
+
+            
+                    //send the default case to meeeeeeeeeeee. uses get method. don't do that. Fallback if post breaks in future.
+                    
+                    // var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
+                    // var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
+                    // var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
+                    // const response = await web.chat.postMessage(parsedBlock);
+
                     // postMessage(parsedBlock) accepts the entire JSON payload from basicsearch and pushes it to the chat window in Slack
                     break;
             }
@@ -114,6 +132,21 @@ slackEvents.on('message', (message, body) => {
     })();
 });
 
+
+
+
+// TONY: interactivity function:
+slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
+    try {
+        //call manage selection modal
+        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
+        var openModal = JSON.parse(block);
+        await web.views.open( openModal );
+
+    } catch (e) {
+        console.log(e);
+    }
+});
 
 
 // interactivity functions
@@ -130,23 +163,13 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
     }
 });
 
-// TONY: interactivity function:
-slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
-    try {
-        //call manage selection modal
-        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
-        var openModal = JSON.parse(block);
-        await web.views.open( openModal );
 
-    } catch (e) {
-        console.log(e);
-    }
-});
 
 //tony modal calls
 slackInteractions.action({"action-id": "manageactionselected" }, async (payload) =>{
     try {
 
+        
         //testing prototype crud modal 
         var block = testblock.testblockdonotupvote(payload.trigger_id);
         var openModal = JSON.parse(block);
@@ -162,8 +185,17 @@ slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     var actionselect = payload.view.state.values.selectAction.manageactionselected.selected_option.value;
     var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, no, 0, "no", "no", "no", 0, false, 0)
 
-    var gettingdata = axios.post('http://localhost:58685/api/values/'[postdata])
-    var databack = gettingdata;
+   // var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
+   
+    var url = "http://localhost:58685/api/values/";
+    axios.post(url,powstdata)
+    .then((res) => {
+        var parsedBlock = testblock.testblockdonotupvote(res, trigger);
+        web.chat.postMessage(parsedBlock);
+        console.log(res)
+    }).catch((error) => {
+    console.error(error)
+    });
 
     try {
         
@@ -171,23 +203,6 @@ slackInteractions.viewSubmission('manageactionselect', async (payload) => {
         console.log(e);
     }
 });
-
-//I dont think I am using this currently but better safe than sorry
-slackInteractions.action({ "action-id": "manageactionselect" }, async (payload) => {
-    try {
-        var openTonyModal = JSON.parse(tonyTestModal.tonyTestModal(/*Your parameters to send in from the payload */)); // This prepares the modal in JSON format
-        await web.views.open( openTonyModal ); // This actually opens the modal in the UI
-    } catch (e) {
-        console.log(e); // For debugging
-    }
-
-    return {
-        text: 'Processing...'
-    }
-});
-
-// new funciton
-
 // modal submit functions
 slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
     const blockData = payload.view.state;

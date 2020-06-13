@@ -1,10 +1,5 @@
-function testblockdonotupvote(trigger){
-    testdata = [
-        "test1",
-    "test2",
-    "test3",
-    "test4"
-    ]
+function testblockdonotupvote(data, trigger){
+    testdata = data;
 
     blocks=[];
     testdata.map(d=> {

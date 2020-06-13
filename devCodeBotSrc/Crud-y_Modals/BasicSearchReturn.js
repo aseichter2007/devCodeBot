@@ -1,7 +1,7 @@
 
 function BasicSearch(message, ogmessage) {
              
-    var search = message.data;
+    var search = message.data.searches;
     var search1 = Queryformatter(search[0]);
     var search2 = Queryformatter(search[1]);
     var search3 = Queryformatter(search[2]);
