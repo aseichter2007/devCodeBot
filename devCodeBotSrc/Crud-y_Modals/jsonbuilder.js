@@ -13,7 +13,7 @@ var request = {"search": {
         "id": id,
         "name": name,
         "matchTo": match,
-        "conceptKey": matchid,
+        "conceptkey": matchid,
         "day": day
     },
     "edit": { 
@@ -22,7 +22,7 @@ var request = {"search": {
         "originalname": oldname,
         "newname": name,
         "matchto": match,
-        "conceptKey": matchid,
+        "conceptkey": matchid,
         "day": day
     },
     "remove": {
@@ -30,7 +30,7 @@ var request = {"search": {
         "id": id,
         "name": name       
     },
-    "setting":{
+    "isetting":{
         "id": id,
         "set": set
     }
