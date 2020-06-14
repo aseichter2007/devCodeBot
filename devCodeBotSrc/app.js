@@ -210,7 +210,7 @@ slackInteractions.action({ "action_id": "launchQuestionCardModal" }, async (payl
 
 slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     
-    try {
+    try {//attempt to get data reqired to update module
     var responseurl = payload.view.private_metadata;
     viewid = payload.view.id;
     //var trigger = payload.trigger_id;
@@ -226,7 +226,7 @@ slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     }).catch((error) => {
         console.error(error)
     });
-    
+    //needs the correct data to update modal. which data is the correct data remains a mystery.
     var block = testblock.testblockdonotupvote(thisresponse, viewid, responseurl);
     var parsedBlock = JSON.parse(block);
     var nextresponse = await web.chat.update(parsedBlock);// this does not currently work. updating modals is strange sorcery.
