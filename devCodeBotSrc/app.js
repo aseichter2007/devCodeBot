@@ -27,16 +27,16 @@ const questionCard = require('./BlockKits/qc');
 const qcStart = require('./BlockKits/qc-start');
 const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to see how I handle input data from the modal and posting it back to the instructor chat. You will need to create your own file similar to this one to post the payload back to your API
 const timerUp = require('./BlockKits/timerUp');
-const selectOperationModal = require('./Crud-Y_Modals/selectOperationModal'); // TONY: This file contains the actual modal block
-const basicSearchReturn = require('./Crud-y_Modals/BasicSearchReturn')
-const testblock = require('./Crud-y_Modals/cruddyprototye')
-const dbaccess = require('./Crud-y_Modals/DbAccess.js');
+const selectOperationModal = require('./CrudModal/selectOperationModal'); // TONY: This file contains the actual modal block
+const basicSearchReturn = require('./CrudModal/BasicSearchReturn')
+const testblock = require('./CrudModal/cruddyprototye')
+const dbaccess = require('./CrudModal/DbAccess.js');
 
 
 //tony includes
 const axios = require("axios");
-const myaxios = require('./Crud-y_Modals/axiosmethods');
-const jsonbuilder = require('./Crud-y_Modals/jsonbuilder');
+const myaxios = require('./CrudModal/axiosmethods');
+const jsonbuilder = require('./CrudModal/jsonbuilder');
 const { Console } = require('console');
 
 
@@ -112,11 +112,9 @@ slackEvents.on('message', (message, body) => {
                     }).catch((error) => {
                     console.error(error)
                     });
-                    //axios is hot garbage. hours wasted here 9.5. /still dont know what I was missing the hundred ways I tried but this worked.
 
             
-                    //send the default case to meeeeeeeeeeee. uses get method. don't do that. Fallback if post breaks in future.
-                    
+                    // uses get method. don't do that. Fallback if post breaks in future.                    
                     // var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
                     // var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
                     // var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
@@ -136,7 +134,7 @@ slackEvents.on('message', (message, body) => {
 
 
 // TONY: interactivity function:
-slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
+slackInteractions.action({"actionId": "selectoperation" }, async (payload) =>{
     try {
         //call manage selection modal
         var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
@@ -150,7 +148,7 @@ slackInteractions.action({"action-id": "selectoperation" }, async (payload) =>{
 
 
 // interactivity functions
-slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payload) => {
+slackInteractions.action({ "actionId": "launchQuestionCardModal" }, async (payload) => {
     try {
         var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
         await web.views.open( openModal );
@@ -166,7 +164,7 @@ slackInteractions.action({ "action-id": "launchQuestionCardModal" }, async (payl
 
 
 //tony modal calls
-slackInteractions.action({"action-id": "manageactionselected" }, async (payload) =>{
+slackInteractions.action({"actionId": "manageactionselected" }, async (payload) =>{
     try {
 
         
@@ -180,10 +178,11 @@ slackInteractions.action({"action-id": "manageactionselected" }, async (payload)
     }
 });
 slackInteractions.viewSubmission('manageactionselect', async (payload) => {
-
+    
+    try {
     var trigger = payload.trigger_id;
     var actionselect = payload.view.state.values.selectAction.manageactionselected.selected_option.value;
-    var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, no, 0, "no", "no", "no", 0, false, 0)
+    var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, "non", 0, "non", "non", "non", 0, false, 0)
 
    // var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
    
@@ -197,7 +196,6 @@ slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     console.error(error)
     });
 
-    try {
         
     } catch (e) {
         console.log(e);

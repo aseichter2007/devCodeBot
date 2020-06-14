@@ -1,5 +1,5 @@
 function testblockdonotupvote(data, trigger){
-    testdata = data;
+    var testdata = data[data.responsetype];
 
     blocks=[];
     testdata.map(d=> {
