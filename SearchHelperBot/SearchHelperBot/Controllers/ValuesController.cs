@@ -38,6 +38,13 @@ namespace SearchHelperBot.Controllers
         public  async Task<List<string>> Get(string search )    //we can get our data from the front end as a giant string with underscores as word dividers and return a processed string
         {                                                       //or we can get json
             int day = 0;        // will come with search when implemented
+
+            Setting logging = _repo.Settings.FindByCondition(c => c.SettingName == "logging").Single();
+            if (logging.Set)
+            {
+                PostRawSearch("user", $"Day {day}: {search}");
+            }
+
             char split = '_';   //urls cannot contain spaces, this sets the split charachter in SearchHelper.cs
             List<string> processedSearches = await ProcessSearch(day, search, split);
 
@@ -525,6 +532,7 @@ namespace SearchHelperBot.Controllers
         {
             RawSearch rawSearch = new RawSearch();
             rawSearch.StudentName = name;
+            rawSearch.Timestamp = DateTime.Now;
             rawSearch.Search = search;
             _repo.RawSearches.Create(rawSearch);
             _repo.Save();

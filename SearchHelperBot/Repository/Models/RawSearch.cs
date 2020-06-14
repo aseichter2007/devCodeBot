@@ -8,6 +8,7 @@ namespace Repository.Models
     {
         public int RawSearchId { get; set; }
         public string StudentName { get; set; }
+        public DateTime Timestamp { get; set; }
         public string Search { get; set; }
     }
 }

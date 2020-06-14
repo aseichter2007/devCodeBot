@@ -89,7 +89,7 @@ namespace Repository.Data
                 );
             builder.Entity<Setting>()
                 .HasData(
-                    new Setting { SettingId = 1, SettingName = "logging", Set = false }
+                    new Setting { SettingId = 1, SettingName = "logging", Set = true }
                 );
         }
     }

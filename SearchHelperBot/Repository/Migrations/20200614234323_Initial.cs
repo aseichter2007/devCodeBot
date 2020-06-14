@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Repository.Migrations
 {
@@ -134,6 +135,7 @@ namespace Repository.Migrations
                     RawSearchId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentName = table.Column<string>(nullable: true),
+                    Timestamp = table.Column<DateTime>(nullable: false),
                     Search = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -243,7 +245,7 @@ namespace Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "SettingId", "Set", "SettingName" },
-                values: new object[] { 1, false, "logging" });
+                values: new object[] { 1, true, "logging" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
