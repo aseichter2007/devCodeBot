@@ -5,6 +5,7 @@ const questionCardStart = (message) => {
         "blocks": [
             {
                 "type": "section",
+                "block_id": "qcard",
                 "text": {
                     "type": "mrkdwn",
                     "text": "Click this button to fill out a new question card"
@@ -20,7 +21,7 @@ const questionCardStart = (message) => {
                 }
             }
         ],
-        "action-id": "launchQuestionCardModal"
+        "action_id": "launchQuestionCardModal"
     }`;
 	return block;
 }

@@ -5,6 +5,7 @@ const DbAcess = (message) => {
         "blocks": [
             {
                 "type": "section",
+                "block_id": "manage",
                 "text": {
                     "type": "mrkdwn",
                     "text": "Would you like to manage the database?"
@@ -20,7 +21,7 @@ const DbAcess = (message) => {
                 }
             }
         ],
-        "action-id": "selectoperation"
+        "action_id": "selectoperation"
     }`;
 	return block;
 }

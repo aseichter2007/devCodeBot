@@ -113,8 +113,10 @@ slackEvents.on('message', (message, body) => {
                     console.error(error)
                     });
 
+                    //we could offer a timebox after search, I am not currently doing that.
+
             
-                    // uses get method. don't do that. Fallback if post breaks in future.                    
+                    // uses get method. need post version for logging.                    
                     // var reformatted = basicSearchReturn.SearchApiFormatter(message.text);
                     // var apiresponse = await axios.get('http://localhost:58685/api/values/'+reformatted);  
                     // var parsedBlock = basicSearchReturn.BasicSearch(apiresponse, message);
@@ -133,22 +135,36 @@ slackEvents.on('message', (message, body) => {
 
 
 
-// TONY: interactivity function:
-slackInteractions.action({"actionId": "selectoperation" }, async (payload) =>{
+// this isn't ideal but it lets us return different modals. 
+slackInteractions.action({"action_id": "selectoperation" }, async (payload) =>{
+   var data= payload.actions;
+    var actions = data[0];
+    var modalexpected = actions.block_id;
+   if (modalexpected == "qcard") {
     try {
-        //call manage selection modal
-        var block = selectOperationModal.ManageActionSelect(payload.trigger_id);
-        var openModal = JSON.parse(block);
+        var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
         await web.views.open( openModal );
-
     } catch (e) {
         console.log(e);
     }
+   }
+   if (modalexpected == "manage") {
+       
+       try {
+           //call manage selection modal
+           var block = selectOperationModal.ManageActionSelect(payload.trigger_id, payload.channel.id);
+           var openModal = JSON.parse(block);
+           await web.views.open( openModal );
+   
+       } catch (e) {
+           console.log(e);
+       }
+   }
 });
 
 
 // interactivity functions
-slackInteractions.action({ "actionId": "launchQuestionCardModal" }, async (payload) => {
+slackInteractions.action({ "action_id": "launchQuestionCardModal" }, async (payload) => {
     try {
         var openModal = JSON.parse(questionCard.questionCard(payload.trigger_id, payload.channel.id));
         await web.views.open( openModal );
@@ -164,38 +180,36 @@ slackInteractions.action({ "actionId": "launchQuestionCardModal" }, async (paylo
 
 
 //tony modal calls
-slackInteractions.action({"actionId": "manageactionselected" }, async (payload) =>{
-    try {
+// slackInteractions.action({"actionId": "manageactionselected" }, async (payload) =>{
+//     try {
 
         
-        //testing prototype crud modal 
-        var block = testblock.testblockdonotupvote(payload.trigger_id);
-        var openModal = JSON.parse(block);
-        await web.views.open( openModal );
+//         //testing prototype crud modal 
+//         var block = testblock.testblockdonotupvote(payload.trigger_id);
+//         var openModal = JSON.parse(block);
+//         await web.views.open( openModal );
 
-    } catch (e) {
-        console.log(e);
-    }
-});
+//     } catch (e) {
+//         console.log(e);
+//     }
+// });
 slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     
     try {
+    var responseurl;
     var trigger = payload.trigger_id;
     var actionselect = payload.view.state.values.selectAction.manageactionselected.selected_option.value;
-    var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, "non", 0, "non", "non", "non", 0, false, 0)
-
-   // var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
-   
+    var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, "non", 0, "non", "non", "non", 0, false, 0);
     var url = "http://localhost:58685/api/values/";
     axios.post(url,powstdata)
     .then((res) => {
-        var parsedBlock = testblock.testblockdonotupvote(res, trigger);
+        var block = testblock.testblockdonotupvote(res, trigger);
+        var parsedBlock = JSON.parse(block);
         web.chat.postMessage(parsedBlock);
         console.log(res)
     }).catch((error) => {
     console.error(error)
     });
-
         
     } catch (e) {
         console.log(e);
@@ -222,7 +236,7 @@ slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
 });
 
 //TONY: test submission; do with this what you want, copy the above pattern to access input values from the modal and then, in the try block, do something with the captured data
-slackInteractions.viewSubmission('tonyTestModalSubmit', async (payload) => {
+slackInteractions.viewSubmission('crudout', async (payload) => {
     // extract input data into variables
     console.log('Extracting input data');
 

@@ -40,7 +40,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                                 "text": "*view raw search data.*",
                                 "emoji": true
                             },
-                            "value": "rawsearch"
+                            "value": "rawsearches"
                         },
                         {
                             "text": {
@@ -48,7 +48,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                                 "text": "*View and manage active project.*",
                                 "emoji": true
                             },
-                            "value": "activeproject"
+                            "value": "activeprojects"
                         },
                         {
                             "text": {
@@ -56,7 +56,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                                 "text": "*View and manage preferred language.*",
                                 "emoji": true
                             },
-                            "value": "preferredlanguage"
+                            "value": "preferredlanguages"
                         },
                         {
                             "text": {
@@ -101,10 +101,10 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "*Toggle logging.",
+                                "text": "*settings*",
                                 "emoji": true
                             },
-                            "value": "logging"
+                            "value": "settings"
                         }
                     ]
                 },
@@ -112,8 +112,13 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                     "type": "plain_text",
                     "text": "Manage devCodeBot",
                     "emoji": true
-                }
-            }
+                }                
+            },
+            "element": {
+                "action_id": "my_action_id",
+                "type": "conversations_select",
+                "response_url_enabled": true,
+              }
         ]
     }
 }`
