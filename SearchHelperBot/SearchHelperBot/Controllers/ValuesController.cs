@@ -47,7 +47,8 @@ namespace SearchHelperBot.Controllers
         // POST api/<ValuesController>
         // POST will be our sole entrypoint and the incoming file will define what happens
         [HttpPost]
-        public async Task<string> Post([FromBody] Incoming incoming)//changed output to strings
+        public async Task<string> Post([FromBody] Incoming incoming)// I, Tony, asked for this implementation to simplify logic on the front end. 
+                                                                   //This way I can send out values straight from the modals to define the actions taken by the back end.
         {
             Outgoing outgoing;
 
@@ -56,7 +57,11 @@ namespace SearchHelperBot.Controllers
                 int day = incoming.search.request.day;
                 string search = incoming.search.request.search;
 
+                Setting logging = _repo.Settings.FindByCondition(c => c.SettingName == "logging").Single();
+                if (logging.Set)
+                {
                 PostRawSearch(incoming.search.username, $"Day {day}: {search}");
+                }
 
                 outgoing = new Outgoing();
 

@@ -29,7 +29,7 @@ const qcPost = require('./BlockKits/qc-post'); // TONY: reference this file to s
 const timerUp = require('./BlockKits/timerUp');
 const selectOperationModal = require('./CrudModal/selectOperationModal'); // TONY: This file contains the actual modal block
 const basicSearchReturn = require('./CrudModal/BasicSearchReturn')
-const testblock = require('./CrudModal/cruddyprototye')
+const testblock = require('./CrudModal/crudprototype')
 const dbaccess = require('./CrudModal/DbAccess.js');
 
 
@@ -57,14 +57,30 @@ slackEvents.on('message', (message, body) => {
       try {
         // Respond to the message back in the same channel depending on input
         if (typeof message.bot_id === 'undefined') {
-            switch (message.text) {   
+            var thisuser = await web.users.info(message)
+            var call = message.text;
+            switch (call.toLowerCase()) {   
                 case 'question card':
+                case 'questioncard':
+                case 'give me a question card':
+                case 'need question card':
+                case 'question':
+                case 'card':
+                case 'i need a question card':
                     var block = qcStart.questionCardStart(message);
                     var parsedBlock = JSON.parse(block);
                     let qcResponse = await web.chat.postMessage(parsedBlock);
                     break;
                 case 'timebox':
-                    var block = timerUp.timerUp(message, unixTimestamp.now('+2m'));
+                case 'timebox me':
+                case 'time':
+                case 'time me':
+                case 'give me a timebox':
+                case 'start timer':
+                case 'give me a timer':
+                case 'i need a timebox':
+                case 'i need a timer':
+                    var block = timerUp.timerUp(message, unixTimestamp.now('+2m'));//set to 2 minutes for demonstration pusrposes, change for production.
                     var parsedBlock = JSON.parse(block);
                     var checkIfTimeboxExists = await web.chat.scheduledMessages.list({ channel: message.channel });
                     var timeboxValue = checkIfTimeboxExists.scheduled_messages[0];
@@ -76,6 +92,15 @@ slackEvents.on('message', (message, body) => {
                     }
                     break;
                 case 'cancel timebox':
+                case 'cancel':
+                case 'solved':
+                case 'stop timebox':
+                case 'stop':
+                case 'stop timing me':
+                case 'stop timer':
+                case 'stop my timer':
+                case 'remove timebox':
+                case 'remove timer':
                     try {
                         let queuedMessage = await web.chat.scheduledMessages.list({ channel: message.channel, limit: 1 });
                         let queuedMessageId = queuedMessage.scheduled_messages[0].id;
@@ -86,23 +111,29 @@ slackEvents.on('message', (message, body) => {
                     }
                     break;
                 case 'help':
+                case 'help me':
+                case 'devcodebot':
+                case 'hi':
+                case 'hello':
+                case 'yo':
+                case 'whats up devcodebot':
                     var block = greeting.greeting(message);
                     var parsedBlock = JSON.parse(block);
                     let defaultResponse = await web.chat.postMessage(parsedBlock);
                     break;
 
                 case 'manage':
-                     var block = dbaccess.DbAcess(message);
-                     var parsedBlock = JSON.parse(block);
-                     const manageresponse = await web.chat.postMessage(parsedBlock)
-                    break;
+                    if (thisuser.user.is_admin) {//if not admin they will fall though to default case. 
+                        var block = dbaccess.DbAcess(message);
+                        var parsedBlock = JSON.parse(block);
+                        const manageresponse = await web.chat.postMessage(parsedBlock)
+                       break;
+                    }
                 default:
-                    var user = message.user;
-                   // var userinfo = await web.users.info(user);   //fowley I would be pretty stoked if you could sort this out. We need it for search logging
-                    
+                   
                    
                    //uses proper endpoint to allow logging and user info to pass in. 
-                    var myjson = jsonbuilder.buildmyjson("student", "name", "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
+                    var myjson = jsonbuilder.buildmyjson("student", thisuser.user.real_name, "search", "type", message.text, 0, "name", "name", "name", 0, false, 0)
                     var url = "http://localhost:58685/api/values/";
                  
                     axios.post(url,myjson)
@@ -177,39 +208,28 @@ slackInteractions.action({ "action_id": "launchQuestionCardModal" }, async (payl
     }
 });
 
-
-
-//tony modal calls
-// slackInteractions.action({"actionId": "manageactionselected" }, async (payload) =>{
-//     try {
-
-        
-//         //testing prototype crud modal 
-//         var block = testblock.testblockdonotupvote(payload.trigger_id);
-//         var openModal = JSON.parse(block);
-//         await web.views.open( openModal );
-
-//     } catch (e) {
-//         console.log(e);
-//     }
-// });
 slackInteractions.viewSubmission('manageactionselect', async (payload) => {
     
     try {
-    var responseurl;
-    var trigger = payload.trigger_id;
+    var responseurl = payload.view.private_metadata;
+    viewid = payload.view.id;
+    //var trigger = payload.trigger_id;
+    //var team = payload.view.team.id;
     var actionselect = payload.view.state.values.selectAction.manageactionselected.selected_option.value;
     var powstdata = jsonbuilder.buildmyjson("instructor", "na", actionselect, actionselect, "non", 0, "non", "non", "non", 0, false, 0);
     var url = "http://localhost:58685/api/values/";
-    axios.post(url,powstdata)
+    var thisresponse;
+    var awaiter = await axios.post(url,powstdata)
     .then((res) => {
-        var block = testblock.testblockdonotupvote(res, trigger);
-        var parsedBlock = JSON.parse(block);
-        web.chat.postMessage(parsedBlock);
+        thisresponse = res;
         console.log(res)
     }).catch((error) => {
-    console.error(error)
+        console.error(error)
     });
+    
+    var block = testblock.testblockdonotupvote(thisresponse, viewid, responseurl);
+    var parsedBlock = JSON.parse(block);
+    var nextresponse = await web.chat.update(parsedBlock);// this does not currently work. updating modals is strange sorcery.
         
     } catch (e) {
         console.log(e);
@@ -235,17 +255,6 @@ slackInteractions.viewSubmission('questionCardSubmit', async (payload) => {
     }
 });
 
-//TONY: test submission; do with this what you want, copy the above pattern to access input values from the modal and then, in the try block, do something with the captured data
-slackInteractions.viewSubmission('crudout', async (payload) => {
-    // extract input data into variables
-    console.log('Extracting input data');
-
-    try {
-        console.log('Do things with input data');
-    } catch (e) {
-        console.log(e);
-    }
-})
 
 // Handle errors (see `errorCodes` export)
 slackEvents.on('error', console.error);

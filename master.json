@@ -11,16 +11,16 @@
         "id": 12,
         "name": "the quick brown fox jumps over the lazy dog",
         "matchTo": "this concept somewhere in the database",
-        "conceptKey": "10",
+        "conceptKey": 10,
         "day": 50
     },
     "edit": { 
-        "type": "rearconceptidea",
+        "type": "nearconceptidea",
         "id": 15,
         "originalname": "the brown fox",
         "newname": "thequickBrownfox",
         "matchto": "",
-        "conceptKey": "",
+        "conceptKey": 0,
         "day": 49
     },
     "remove": {
@@ -28,7 +28,7 @@
         "id": 12,
         "name": "completely"       
     },
-    "setting":{
+    "isetting":{
         "id": 1,
         "set": true
     }

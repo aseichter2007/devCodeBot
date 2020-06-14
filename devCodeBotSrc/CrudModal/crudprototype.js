@@ -1,4 +1,4 @@
-function testblockdonotupvote(data, trigger){
+function testblockdonotupvote(data, trigger, channel){
     var datatype = data.data.responseType;
     var viewdata;
     var labelcontent;
@@ -151,9 +151,8 @@ function testblockdonotupvote(data, trigger){
 
 blockstart = 
 `{
-    "trigger_id": "${trigger}",
     "replace_original": "true",
-
+    "view_id" : "${trigger}",
     "view": 
         {
         "type": "modal",

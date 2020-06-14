@@ -5,6 +5,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
     "trigger_id": "${trigger}",
     "view":{
         "type": "modal",
+        "private_metadata": "${caller}",
         "callback_id": "manageactionselect",
         "title": {
             "type": "plain_text",
@@ -113,12 +114,7 @@ const ManageActionSelect = (trigger, caller) =>{/* unsure how the return will wo
                     "text": "Manage devCodeBot",
                     "emoji": true
                 }                
-            },
-            "element": {
-                "action_id": "my_action_id",
-                "type": "conversations_select",
-                "response_url_enabled": true,
-              }
+            }
         ]
     }
 }`
