@@ -5,6 +5,7 @@ const timerUp = (message, time) => {
         "blocks": [
             {
                 "type": "section",
+                "block_id": "qcard",
                 "text": {
                     "type": "mrkdwn",
                     "text": "30 minutes have passed! :clock1: Would you like to submit a question card to the instructors?"
